@@ -7,7 +7,6 @@ import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.user.User
 import org.javacord.api.event.server.member.ServerMemberJoinEvent
 import org.javacord.api.listener.server.member.ServerMemberJoinListener
-import org.javacord.api.util.logging.ExceptionLogger
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
@@ -18,7 +17,6 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.lang.RuntimeException
 import java.net.URI
 import javax.imageio.ImageIO
 import kotlin.math.roundToInt

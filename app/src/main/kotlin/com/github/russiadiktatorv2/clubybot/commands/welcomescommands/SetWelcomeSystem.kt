@@ -14,7 +14,6 @@ import org.javacord.api.listener.message.MessageCreateListener
 import org.javacord.api.listener.message.reaction.ReactionAddListener
 import org.javacord.api.util.event.ListenerManager
 import java.awt.Color
-import java.lang.NumberFormatException
 import java.sql.SQLException
 import java.util.*
 import java.util.concurrent.ExecutionException
@@ -236,6 +235,7 @@ class SetWelcomeSystem : WelcomeCommand {
             }
         }
     }
+
 
     private fun delete(messageid: Long, state: Int) {
 
