@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d8fa231-c420-4a23-9bc6-a02be22d0afd" name="Default Changelist" comment="Updated the gradle version from 6.8.2 to 6.8.3">
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/MariaDB.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/MariaDB.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" afterDir="false" />
     </list>
@@ -115,7 +118,7 @@
       <recent name="com.github.russiadiktatorv2.clubybot.management.commands.manage" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ProgramLoaderKt">
+  <component name="RunManager" selected="Gradle.Cluby [distTar]">
     <configuration name="Cluby [distTar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -194,7 +197,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ProgramLoaderKt" />
         <item itemvalue="Gradle.Cluby [installDist]" />
         <item itemvalue="Gradle.Cluby [distZip]" />
         <item itemvalue="Gradle.Cluby [distTar]" />
@@ -238,7 +240,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614282463548</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Updated the gradle version from 6.8.2 to 6.8.3">
+      <created>1614282711244</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1614282711244</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -251,6 +260,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />

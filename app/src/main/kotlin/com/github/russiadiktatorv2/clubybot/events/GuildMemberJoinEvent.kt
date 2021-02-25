@@ -3,6 +3,7 @@ package com.github.russiadiktatorv2.clubybot.events
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager
 import com.github.russiadiktatorv2.clubybot.management.commands.data.WelcomeSystem
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
+import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.user.User
 import org.javacord.api.event.server.member.ServerMemberJoinEvent
 import org.javacord.api.listener.server.member.ServerMemberJoinListener
@@ -63,7 +64,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                                 g.drawString("MEMBER", width / 36.6f.roundToInt(), height / 1.5f.roundToInt())
                                 g.color = Color.GRAY
                                 g.font = font.deriveFont(60f)
-                                g.drawString("#${event.server.members.filter { user: User -> user.isBot.not()}.count()}", (width / 1.2f).roundToInt(), (height / 1.9f).roundToInt())
+                                g.drawString("#${event.server.members.filter { user: User -> user.isBot.not()}.count()}", (width / 1.2f).roundToInt(), (height / 1.99f).roundToInt())
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
 

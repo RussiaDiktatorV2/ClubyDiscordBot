@@ -204,10 +204,10 @@ class SetWelcomeSystem : WelcomeCommand {
                                         "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false)
                                 setColor(Color.decode("0x32ff7e"))
                             }
-                            event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                             message.edit(finishedSetupEmbed).whenCompleteAsync { _, _ ->
                                 stopTimer(message.id)
                                 message.removeAllReactions()
+                                event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                                 delete(message.id, 2)
                             }
                         } else if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":x:"))) {
@@ -223,10 +223,10 @@ class SetWelcomeSystem : WelcomeCommand {
                                         "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false)
                                 setColor(Color.decode("0x32ff7e"))
                             }
-                            event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                             message.edit(finishedSetupEmbed).whenComplete { _, _ ->
                                 stopTimer(message.id)
                                 message.removeAllReactions()
+                                event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                                 delete(message.id, 2)
                             }
                         }
