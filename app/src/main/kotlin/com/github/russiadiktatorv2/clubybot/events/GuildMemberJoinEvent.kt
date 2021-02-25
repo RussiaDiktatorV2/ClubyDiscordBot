@@ -28,7 +28,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
         if (event.user.isBot.not()) {
             var welcomeChannel: WelcomeSystem?
             if (CacheManager.welcomeMap[event.server.id].also { welcomeChannel = it } != null) {
-                event.user.avatar.asBufferedImage().thenCompose { avatar ->
+                event.user.avatar.asBufferedImage().thenAccept { avatar ->
                     try {
                         val image: BufferedImage = ImageIO.read(URI.create("https://media.discordapp.net/attachments/739079625413492767/800001453149388840/Background.png").toURL())
                         val g: Graphics = image.graphics
@@ -110,7 +110,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                         throw RuntimeException(exception)
                     }
 
-                }.exceptionally(ExceptionLogger.get())
+                }
             }
         }
     }
