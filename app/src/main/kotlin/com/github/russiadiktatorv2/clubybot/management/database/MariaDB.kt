@@ -5,10 +5,10 @@ import java.sql.*
 
 object MariaDB {
 
-    private const val username = "root"
-    private const val database: String = "clubydatabase"
-    private const val host: String = "localhost"
-    private const val port: String = "3306"
+    private const val username = ""
+    private const val database: String = ""
+    private const val host: String = ""
+    private const val port: String = ""
 
     var connection: Connection? = null
     private var statement: Statement? = null
