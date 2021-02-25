@@ -14,7 +14,6 @@ import org.javacord.api.listener.message.MessageCreateListener
 import org.javacord.api.listener.message.reaction.ReactionAddListener
 import org.javacord.api.util.event.ListenerManager
 import java.awt.Color
-import java.lang.NumberFormatException
 import java.sql.SQLException
 import java.util.*
 import java.util.concurrent.ExecutionException
@@ -204,10 +203,10 @@ class SetWelcomeSystem : WelcomeCommand {
                                         "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false)
                                 setColor(Color.decode("0x32ff7e"))
                             }
-                            event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                             message.edit(finishedSetupEmbed).whenCompleteAsync { _, _ ->
                                 stopTimer(message.id)
                                 message.removeAllReactions()
+                                event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                                 delete(message.id, 2)
                             }
                         } else if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":x:"))) {
@@ -223,10 +222,10 @@ class SetWelcomeSystem : WelcomeCommand {
                                         "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false)
                                 setColor(Color.decode("0x32ff7e"))
                             }
-                            event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                             message.edit(finishedSetupEmbed).whenComplete { _, _ ->
                                 stopTimer(message.id)
                                 message.removeAllReactions()
+                                event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
                                 delete(message.id, 2)
                             }
                         }
@@ -236,6 +235,7 @@ class SetWelcomeSystem : WelcomeCommand {
             }
         }
     }
+
 
     private fun delete(messageid: Long, state: Int) {
 

@@ -6,7 +6,6 @@ import com.github.russiadiktatorv2.clubybot.management.commands.handling.createE
 import org.javacord.api.entity.user.User
 import org.javacord.api.event.server.member.ServerMemberJoinEvent
 import org.javacord.api.listener.server.member.ServerMemberJoinListener
-import org.javacord.api.util.logging.ExceptionLogger
 import java.awt.Color
 import java.awt.Font
 import java.awt.Graphics
@@ -17,7 +16,6 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.lang.RuntimeException
 import java.net.URI
 import javax.imageio.ImageIO
 import kotlin.math.roundToInt
@@ -28,7 +26,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
         if (event.user.isBot.not()) {
             var welcomeChannel: WelcomeSystem?
             if (CacheManager.welcomeMap[event.server.id].also { welcomeChannel = it } != null) {
-                event.user.avatar.asBufferedImage().thenCompose { avatar ->
+                event.user.avatar.asBufferedImage().thenAccept { avatar ->
                     try {
                         val image: BufferedImage = ImageIO.read(URI.create("https://media.discordapp.net/attachments/739079625413492767/800001453149388840/Background.png").toURL())
                         val g: Graphics = image.graphics
@@ -63,7 +61,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                                 g.drawString("MEMBER", width / 36.6f.roundToInt(), height / 1.5f.roundToInt())
                                 g.color = Color.GRAY
                                 g.font = font.deriveFont(60f)
-                                g.drawString("#${event.server.members.filter { user: User -> user.isBot.not()}.count()}", (width / 1.2f).roundToInt(), (height / 1.9f).roundToInt())
+                                g.drawString("#${event.server.members.filter { user: User -> user.isBot.not()}.count()}", (width / 1.2f).roundToInt(), (height / 1.99f).roundToInt())
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
 
@@ -110,7 +108,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                         throw RuntimeException(exception)
                     }
 
-                }.exceptionally(ExceptionLogger.get())
+                }
             }
         }
     }
