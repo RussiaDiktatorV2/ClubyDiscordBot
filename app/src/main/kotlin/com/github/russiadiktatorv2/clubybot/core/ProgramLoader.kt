@@ -29,7 +29,6 @@ object ClubyDiscordBot {
             .setIntents(Intent.GUILDS, Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS)
             .addServerMemberJoinListener(GuildMemberJoinEvent())
             .login().join()
-        discordApi.updateActivity(ActivityType.STREAMING, "${convertUnicode("\uD83D\uDD75\u200D♂")}️| with ${discordApi.servers.size} guilds")
         discordApi.setMessageCacheSize(0, 0)
         discordApi.setReconnectDelay { reconnectDelay -> reconnectDelay * 3 }
         discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( {changeActivity(discordApi)}, 0, 2, TimeUnit.MINUTES)
