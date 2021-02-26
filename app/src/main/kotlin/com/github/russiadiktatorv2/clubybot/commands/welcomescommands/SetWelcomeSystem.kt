@@ -30,7 +30,7 @@ class SetWelcomeSystem : WelcomeCommand {
                 setColor(Color.decode("0x32ff7e"))
             }
             try {
-                event.deleteMessage().whenCompleteAsync { t, u ->
+                event.deleteMessage().whenCompleteAsync { _, _ ->
                     val message = event.channel.sendMessage(setupEmbed).get()
                     createListener(message, 1, event.messageAuthor.asUser().get().id, null)
                     startTimer(message)
@@ -47,55 +47,62 @@ class SetWelcomeSystem : WelcomeCommand {
 
     private val reactionmap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
-    private fun createListener(message: Message, state: Int, memberID: Long , welcomeChannel: WelcomeSystem?) {
+    private fun createListener(message: Message, state: Int, memberID: Long, welcomeChannel: WelcomeSystem?) {
         when (state) {
 
             1 -> {
-                val listenerManager: ListenerManager<MessageCreateListener> = message.channel.addMessageCreateListener { event ->
-                    if (event.messageAuthor.asUser().get().id == memberID) {
-                        try {
-                            val welcomeChannelID = event.messageContent.toLong()
-                            event.deleteMessage()
-                            if (event.server.get().getTextChannelById(welcomeChannelID).isPresent) {
-                                if (welcomeMap.containsKey(event.server.get().id)) {
-                                    delete(message.id, 1)
-                                    event.channel.sendMessage(createEmbed {
-                                        setAuthor("${convertUnicode("\uD83D\uDC4B")} | The setup was terminated")
-                                        setDescription("The welcomechannel ``${event.server.get().getTextChannelById(welcomeChannelID).get().name}`` " +
-                                                "is already the welcomechannel of **${event.server.get().name}**")
-                                        setColor(Color.decode("0xf2310f")).setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
-                                    })
-                                } else if (event.server.flatMap { server: Server -> server.getTextChannelById(welcomeChannelID) }.isPresent) {
-                                    val welcomeSystem = WelcomeSystem(null, null, null, null)
-                                    welcomeSystem.channelID = welcomeChannelID
-
-                                    val stepTwoEmbed = createEmbed {
-                                        setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 2 of the Setup", null, message.api.yourself.avatar)
-                                        setDescription("Now you can chose between to emojis.\n:ok: for a custom welcome message :x: to don't set a welcome message")
-                                        setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
-                                    }
-                                    message.edit(stepTwoEmbed).whenComplete { _, _ ->
-                                        message.addReactions(convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
+                val listenerManager: ListenerManager<MessageCreateListener> =
+                    message.channel.addMessageCreateListener { event ->
+                        if (event.messageAuthor.asUser().get().id == memberID) {
+                            try {
+                                val welcomeChannelID = event.messageContent.toLong()
+                                event.deleteMessage()
+                                if (event.server.get().getTextChannelById(welcomeChannelID).isPresent) {
+                                    if (welcomeMap.containsKey(event.server.get().id)) {
                                         delete(message.id, 1)
-                                        createListener(message, 2, memberID, welcomeSystem)
+                                        event.channel.sendMessage(createEmbed {
+                                            setAuthor("${convertUnicode("\uD83D\uDC4B")} | The setup was terminated")
+                                            setDescription("The welcomechannel ``${event.server.get().getTextChannelById(welcomeChannelID).get().name}`` " + "is already the welcomechannel of **${event.server.get().name}**")
+                                            setColor(Color.decode("0xf2310f")).setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
+                                        })
+                                    } else if (event.server.flatMap { server: Server ->
+                                            server.getTextChannelById(
+                                                welcomeChannelID
+                                            )
+                                        }.isPresent) {
+                                        val welcomeSystem = WelcomeSystem(null, null, null, null)
+                                        welcomeSystem.channelID = welcomeChannelID
+
+                                        val stepTwoEmbed = createEmbed {
+                                            setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 2 of the Setup", null, message.api.yourself.avatar)
+                                            setDescription("Now you can chose between to emojis.\n:ok: for a custom welcome message :x: to don't set a welcome message")
+                                            setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
+                                        }
+                                        message.edit(stepTwoEmbed).whenComplete { _, _ ->
+                                            message.addReactions(
+                                                convertUnicode("\uD83C\uDD97"),
+                                                convertUnicode("\u274C")
+                                            )
+                                            delete(message.id, 1)
+                                            createListener(message, 2, memberID, welcomeSystem)
+                                        }
                                     }
+                                } else {
+                                    event.channel.sendMessage(createEmbed {
+                                        setAuthor("${convertUnicode("\uD83D\uDC4B")} | An Error occurred!")
+                                        setDescription("Please write an id of a textchannel to set the welcomechannel")
+                                        setColor(Color.decode("0xf2310f"))
+                                    })
                                 }
-                            } else {
+                            } catch (exception: NumberFormatException) {
                                 event.channel.sendMessage(createEmbed {
                                     setAuthor("${convertUnicode("\uD83D\uDC4B")} | An Error occurred!")
-                                    setDescription("Please write an id of a textchannel to set the welcomechannel")
+                                    setDescription("Please write a real id of a textchannel to set the welcomechannel")
                                     setColor(Color.decode("0xf2310f"))
                                 })
                             }
-                        } catch (exception: NumberFormatException) {
-                            event.channel.sendMessage(createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | An Error occurred!")
-                                setDescription("Please write a real id of a textchannel to set the welcomechannel")
-                                setColor(Color.decode("0xf2310f"))
-                            })
                         }
                     }
-                }
                 messagemap[message.id] = listenerManager
             }
 
@@ -120,7 +127,10 @@ class SetWelcomeSystem : WelcomeCommand {
                                 setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
                             }
                             message.edit(stepFourEmbed).whenCompleteAsync { _, _ ->
-                                message.removeReactionsByEmoji(event.user.get(), convertUnicode(":x:"), convertUnicode(":ok:"))
+                                message.removeReactionsByEmoji(event.user.get(),
+                                    convertUnicode(":x:"),
+                                    convertUnicode(":ok:")
+                                )
                                 delete(message.id, 2)
                                 createListener(message, 4, memberID, welcomeChannel)
                             }
@@ -131,26 +141,27 @@ class SetWelcomeSystem : WelcomeCommand {
             }
 
             3 -> {
-                val listenerManager: ListenerManager<MessageCreateListener> = message.channel.addMessageCreateListener { event ->
-                    if (event.messageAuthor.id == memberID) {
-                        val welcomeMessage = event.messageContent
-                        if (welcomeMessage.length <= 170) {
-                            welcomeChannel?.welcomeMessage = welcomeMessage
-                            event.deleteMessage()
+                val listenerManager: ListenerManager<MessageCreateListener> =
+                    message.channel.addMessageCreateListener { event ->
+                        if (event.messageAuthor.id == memberID) {
+                            val welcomeMessage = event.messageContent
+                            if (welcomeMessage.length <= 170) {
+                                welcomeChannel?.welcomeMessage = welcomeMessage
+                                event.deleteMessage()
 
-                            val stepFourEmbed = createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 4 of the Setup(Username?)")
-                                setDescription("Do you would like to add the username with the discriminater (#0042 for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
-                                setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
-                            }
-                            message.edit(stepFourEmbed).whenCompleteAsync { _, _ ->
-                                message.addReactions(convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
-                                delete(message.id, 1)
-                                createListener(message, 4, memberID, welcomeChannel)
+                                val stepFourEmbed = createEmbed {
+                                    setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 4 of the Setup(Username?)")
+                                    setDescription("Do you would like to add the username with the discriminater (#0042 for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
+                                    setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
+                                }
+                                message.edit(stepFourEmbed).whenCompleteAsync { _, _ ->
+                                    message.addReactions(convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
+                                    delete(message.id, 1)
+                                    createListener(message, 4, memberID, welcomeChannel)
+                                }
                             }
                         }
                     }
-                }
                 messagemap[message.id] = listenerManager
             }
 
@@ -165,7 +176,11 @@ class SetWelcomeSystem : WelcomeCommand {
                                 setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
                             }
                             message.edit(stepFiveEmbed).whenCompleteAsync { _, _ ->
-                                message.removeReactionsByEmoji(event.user.get(), convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
+                                message.removeReactionsByEmoji(
+                                    event.user.get(),
+                                    convertUnicode("\uD83C\uDD97"),
+                                    convertUnicode("\u274C")
+                                )
                                 delete(message.id, 2)
                                 createListener(message, 5, memberID, welcomeChannel)
                             }
@@ -177,7 +192,9 @@ class SetWelcomeSystem : WelcomeCommand {
                                 setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
                             }
                             message.edit(stepFiveEmbed).whenCompleteAsync { _, _ ->
-                                message.removeReactionsByEmoji(event.user.get(), convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
+                                message.removeReactionsByEmoji(event.user.get(),
+                                    convertUnicode("\uD83C\uDD97"),
+                                    convertUnicode("\u274C"))
                                 delete(message.id, 2)
                                 createListener(message, 5, memberID, welcomeChannel)
                             }
@@ -188,7 +205,7 @@ class SetWelcomeSystem : WelcomeCommand {
             }
 
             5 -> {
-                val listenerManager: ListenerManager<ReactionAddListener> = message.addReactionAddListener{ event ->
+                val listenerManager: ListenerManager<ReactionAddListener> = message.addReactionAddListener { event ->
                     if (event.userId == memberID) {
                         if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":ok:"))) {
                             welcomeChannel?.memberCountAllowed = true
@@ -196,17 +213,19 @@ class SetWelcomeSystem : WelcomeCommand {
 
                             val finishedSetupEmbed = createEmbed {
                                 setAuthor("${convertUnicode("\uD83D\uDC4B")} | Finished Welcomer Setup", null, event.api.yourself.avatar)
-                                setDescription("The setup was finished by **${event.user.get().name}** for the textchannel " +
-                                        "`${welcomeChannel.channelID?.let { event.server.get().getTextChannelById(it).get().name }}`")
+                                setDescription("The setup was finished by **${event.user.get().name}** for the textchannel " + "`${welcomeChannel.channelID?.let
+                                { event.server.get().getTextChannelById(it).get().name }}`")
                                 addInlineField("Welcome Message", welcomeChannel.welcomeMessage)
-                                addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?", "The username in the picture ``${if (welcomeChannel.userNamesAllowed!!) "is allowed" else "isn't allowed"}``\n\n" +
-                                        "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false)
+                                addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?",
+                                    "The username in the picture ``${if (welcomeChannel.userNamesAllowed!!) "is allowed" else "isn't allowed"}``\n\n" +
+                                            "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false
+                                )
                                 setColor(Color.decode("0x32ff7e"))
                             }
                             message.edit(finishedSetupEmbed).whenCompleteAsync { _, _ ->
                                 stopTimer(message.id)
                                 message.removeAllReactions()
-                                event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
+                                event.api.threadPool.scheduler.schedule({ message.delete() }, 30, TimeUnit.SECONDS)
                                 delete(message.id, 2)
                             }
                         } else if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":x:"))) {
@@ -215,17 +234,17 @@ class SetWelcomeSystem : WelcomeCommand {
 
                             val finishedSetupEmbed = createEmbed {
                                 setAuthor("${convertUnicode("\uD83D\uDC4B")} | Finished Welcomer Setup", null, event.api.yourself.avatar)
-                                setDescription("The setup was finished by **${event.user.get().name}** for the textchannel " +
-                                        "`${welcomeChannel.channelID?.let { event.server.get().getTextChannelById(it).get().name }}`")
+                                setDescription("The setup was finished by **${event.user.get().name}** for the textchannel " + "`${welcomeChannel.channelID?.let { event.server.get().getTextChannelById(it).get().name }}`")
                                 addInlineField("Welcome Message", "${welcomeChannel.welcomeMessage} \u00AD")
                                 addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?", "The username in the picture ``${if (welcomeChannel.userNamesAllowed!!) "is allowed" else "isn't allowed"}``\n\n" +
-                                        "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false)
+                                            "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false
+                                )
                                 setColor(Color.decode("0x32ff7e"))
                             }
                             message.edit(finishedSetupEmbed).whenComplete { _, _ ->
                                 stopTimer(message.id)
                                 message.removeAllReactions()
-                                event.api.threadPool.scheduler.schedule( {message.delete() },30, TimeUnit.SECONDS)
+                                event.api.threadPool.scheduler.schedule({ message.delete() }, 30, TimeUnit.SECONDS)
                                 delete(message.id, 2)
                             }
                         }
@@ -299,7 +318,8 @@ class SetWelcomeSystem : WelcomeCommand {
                     val userNameAllowed = resultSet.getBoolean("userNameAllowed")
                     val memberCountAllowed = resultSet.getBoolean("memberCountAllowed")
 
-                    val welcomeSystem = WelcomeSystem(welcomeChannelID, welcomeMessage, userNameAllowed, memberCountAllowed)
+                    val welcomeSystem =
+                        WelcomeSystem(welcomeChannelID, welcomeMessage, userNameAllowed, memberCountAllowed)
                     welcomeMap[guildID] = welcomeSystem
                 }
                 resultSet.close()

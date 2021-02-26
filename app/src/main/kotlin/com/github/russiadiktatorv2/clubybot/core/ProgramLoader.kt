@@ -39,7 +39,7 @@ object ClubyDiscordBot {
                 if (event.messageAuthor.asUser().isPresent && event.messageAuthor.asUser().get().isBot.not()) {
                     val customPrefix = prefixMap.getOrDefault(event.server.get().id, "!")
                     if (event.messageContent.startsWith(customPrefix)) {
-                        CommandManager().loadClubyCommands(event.messageContent.substring(ClubySettings.BOT_PREFIX.length).split(' ')[0], event, event.messageContent.split(' '))
+                        CommandManager().loadClubyCommands(event.messageContent.substring(customPrefix.length).split(' ')[0], event, event.messageContent.split(' '))
                     }
                 }
             }
