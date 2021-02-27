@@ -1,9 +1,11 @@
 package com.github.russiadiktatorv2.clubybot.commands.welcomescommands
 
-import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot.convertUnicode
+import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.welcomeMap
 import com.github.russiadiktatorv2.clubybot.management.commands.data.WelcomeSystem
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
+import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
+import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendMissingArguments
 import com.github.russiadiktatorv2.clubybot.management.database.MariaDB
 import com.github.russiadiktatorv2.clubybot.management.interfaces.WelcomeCommand
 import org.javacord.api.entity.message.Message
@@ -23,36 +25,41 @@ class SetWelcomeSystem : WelcomeCommand {
 
     override fun executeWelcomeCommands(command: String, event: MessageCreateEvent, arguments: List<String>) {
         if (event.server.get().hasAnyPermission(event.messageAuthor.asUser().get(), PermissionType.MANAGE_SERVER, PermissionType.ADMINISTRATOR)) {
-            val welcomeChannelID: Long = arguments[1].toLong()
-            if (welcomeMap.contains(event.server.get().id)) {
-                event.channel.sendMessage(createEmbed {
-                    setAuthor("${convertUnicode("\uD83D\uDC4B")} | The setup was terminated")
-                    setDescription("The welcomechannel ``${event.server.get().getTextChannelById(welcomeChannelID).get().name}`` " + "is already the welcomechannel of **${event.server.get().name}**")
-                    setColor(Color.decode("0xf2310f")).setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
-                })
-            }
-            val welcomeSystem = WelcomeSystem(null, null, null, null)
-            val setupEmbed = createEmbed {
-                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 2 of the Setup", null, event.api.yourself.avatar)
-                setDescription("Now you can chose between to emojis.\n:ok: for a custom welcome message :x: to don't set a welcome message")
-                setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
-            }
-            if (event.server.flatMap { server: Server -> server.getTextChannelById(welcomeChannelID) }.isPresent) {
-                try {
-                    event.deleteMessage().whenCompleteAsync { _, _ ->
-                        event.channel.sendMessage(setupEmbed).thenAccept {
-                            welcomeSystem.channelID = welcomeChannelID
-                            it.addReactions(convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
-
-                            createListener(it, 2, event.messageAuthor.asUser().get().id, welcomeSystem)
-                            startTimer(it)
+            event.deleteMessage()
+            if (arguments.size == 2) {
+                if (welcomeMap.containsKey(event.server.get().id).not()) { val welcomeChannelID = arguments[1].toLong()
+                    if (event.server.flatMap { server: Server -> server.getTextChannelById(welcomeChannelID) }.isPresent) {
+                        val welcomeSystem = WelcomeSystem(welcomeChannelID, null)
+                        val setupEmbed = createEmbed {
+                            setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Step 2 of the Setup", null, event.api.yourself.avatar)
+                            setDescription("You can chose between two emojis.\n:ok: for a custom welcome message :x: to don't set a welcome message")
+                            setFooter("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
+                        }
+                        try {
+                            event.channel.sendMessage(setupEmbed).thenAccept { it.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
+                                createListener(it, 1, event.messageAuthor.asUser().get().id, welcomeSystem)
+                                startTimer(it)
+                            }
+                        } catch (exception: InterruptedException) {
+                            exception.printStackTrace()
+                        } catch (exception: ExecutionException) {
+                            exception.printStackTrace()
                         }
                     }
-                } catch (exception: InterruptedException) {
-                    exception.printStackTrace()
-                } catch (exception: ExecutionException) {
-                    exception.printStackTrace()
+
+                } else {
+                    sendEmbed(event.channel, 20, TimeUnit.SECONDS) {
+                        setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Problem with the Setup")
+                        setDescription("Your server have already a welcomechannel").setFooter("Delete or update a welcomechannel").setTimestampToNow()
+                        setColor(Color.decode("0xf2310f"))
+                    }
                 }
+            } else {
+                event.channel.sendMissingArguments("setwelcome textchanelid", "Welcome", event.server.get())
+            }
+        } else {
+            sendEmbed(event.channel, 13, TimeUnit.SECONDS) {
+                setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Problem with the Setup")
             }
         }
     }
@@ -61,83 +68,89 @@ class SetWelcomeSystem : WelcomeCommand {
 
     private val reactionmap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
-    private fun createListener(message: Message, state: Int, memberID: Long, welcomeChannel: WelcomeSystem?) {
+    private fun createListener(message: Message, state: Int, memberID: Long, welcomeChannel: WelcomeSystem) {
         when (state) {
 
             1 -> {
+                val listenerManager: ListenerManager<ReactionAddListener> = message.addReactionAddListener { event ->
+                    if (event.userId == memberID) {
+                        if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":ok:"))) {
+                            val stepThreeEmbed = createEmbed {
+                                setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Step 3 of the Setup(Set a message)")
+                                setDescription("Type your custom welcome message now.\nYou are only allowed to use 170 Characters for the name.")
+                                setFooter("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
+                            }
+                            message.edit(stepThreeEmbed).whenComplete { _, _ ->
+                                message.removeAllReactions()
+                                delete(message.id, 2)
+                                createListener(message, 2, memberID, welcomeChannel)
+                            }
+                        } else if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":x:"))) {
+                            val stepFourEmbed = createEmbed {
+                                setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Step 4 of the Setup(Username?)")
+                                setDescription("Do you would like to add the username with the discriminater (#0042 for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
+                                setFooter("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
+                            }
+                            message.edit(stepFourEmbed).whenComplete { _, _ ->
+                                message.removeReactionsByEmoji(event.user.get(), ClubyDiscordBot.convertUnicode(":x:"), ClubyDiscordBot.convertUnicode(":ok:"))
+                                delete(message.id, 2)
+                                createListener(message, 3, memberID, welcomeChannel)
+                            }
+                        }
+                    }
+                }
+                reactionmap[message.id] = listenerManager
+            }
+
+            2 -> {
                 val listenerManager: ListenerManager<MessageCreateListener> =
                     message.channel.addMessageCreateListener { event ->
-                        if (event.messageAuthor.asUser().get().id == memberID) {
-                            try {
-                                val welcomeChannelID = event.messageContent.toLong()
+                        if (event.messageAuthor.id == memberID) {
+                            val welcomeMessage = event.messageContent
+                            if (welcomeMessage.length <= 170) {
+                                welcomeChannel.welcomeMessage = welcomeMessage
                                 event.deleteMessage()
-                                if (event.server.get().getTextChannelById(welcomeChannelID).isPresent) {
-                                    if (welcomeMap.containsKey(event.server.get().id)) {
-                                        delete(message.id, 1)
-                                        event.channel.sendMessage(createEmbed {
-                                            setAuthor("${convertUnicode("\uD83D\uDC4B")} | The setup was terminated")
-                                            setDescription("The welcomechannel ``${event.server.get().getTextChannelById(welcomeChannelID).get().name}`` " + "is already the welcomechannel of **${event.server.get().name}**")
-                                            setColor(Color.decode("0xf2310f")).setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
-                                        })
-                                    } else if (event.server.flatMap { server: Server -> server.getTextChannelById(welcomeChannelID) }.isPresent) {
-                                        val welcomeSystem = WelcomeSystem(null, null, null, null)
-                                        welcomeSystem.channelID = welcomeChannelID
 
-                                        val stepTwoEmbed = createEmbed {
-                                            setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 2 of the Setup", null, message.api.yourself.avatar)
-                                            setDescription("Now you can chose between to emojis.\n:ok: for a custom welcome message :x: to don't set a welcome message")
-                                            setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System")
-                                        }
-                                        message.edit(stepTwoEmbed).whenComplete { _, _ ->
-                                            message.addReactions(convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
-                                            delete(message.id, 1)
-                                            createListener(message, 2, memberID, welcomeSystem)
-                                        }
-                                    }
-                                } else {
-                                    event.channel.sendMessage(createEmbed {
-                                        setAuthor("${convertUnicode("\uD83D\uDC4B")} | An Error occurred!")
-                                        setDescription("Please write an id of a textchannel to set the welcomechannel")
-                                        setColor(Color.decode("0xf2310f"))
-                                    })
+                                val stepFourEmbed = createEmbed {
+                                    setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Step 4 of the Setup(Username?)")
+                                    setDescription("Do you would like to add the username with the discriminater (#0042 for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
+                                    setFooter("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
                                 }
-                            } catch (exception: NumberFormatException) {
-                                event.channel.sendMessage(createEmbed {
-                                    setAuthor("${convertUnicode("\uD83D\uDC4B")} | An Error occurred!")
-                                    setDescription("Please write a real id of a textchannel to set the welcomechannel")
-                                    setColor(Color.decode("0xf2310f"))
-                                })
+                                message.edit(stepFourEmbed).whenComplete { _, _ ->
+                                    message.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
+                                    delete(message.id, 1)
+                                    createListener(message, 3, memberID, welcomeChannel)
+                                }
                             }
                         }
                     }
                 messagemap[message.id] = listenerManager
             }
 
-            2 -> {
+            3 -> {
                 val listenerManager: ListenerManager<ReactionAddListener> = message.addReactionAddListener { event ->
                     if (event.userId == memberID) {
-                        if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":ok:"))) {
-                            val stepThreeEmbed = createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 3 of the Setup(Set a message)")
-                                setDescription("Type your custom welcome message now.\nYou are only allowed to use 170 Characters for the name.")
-                                setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
+                        if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":ok:"))) {
+                            welcomeChannel.userNamesAllowed = true
+                            val stepFiveEmbed = createEmbed {
+                                setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Step 5 of the Setup (Membercount)")
+                                setDescription("Do you would like to add a membercount in the welcome picture which count the new user is on server?\n:ok: for yes or :x: for no")
+                                setFooter("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
                             }
-                            message.edit(stepThreeEmbed).whenComplete { _, _ ->
-                                message.removeAllReactions()
+                            message.edit(stepFiveEmbed).whenComplete { _, _ ->
+                                message.removeReactionsByEmoji(event.user.get(), ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
                                 delete(message.id, 2)
-                                createListener(message, 3, memberID, welcomeChannel)
+                                createListener(message, 4, memberID, welcomeChannel)
                             }
-                        } else if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":x:"))) {
-                            val stepFourEmbed = createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 4 of the Setup(Username?)")
-                                setDescription("Do you would like to add the username with the discriminater (#0042 for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
-                                setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
+                        } else if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":x:"))) {
+                            welcomeChannel.userNamesAllowed = false
+                            val stepFiveEmbed = createEmbed {
+                                setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Step 5 of the Setup (Membercount)")
+                                setDescription("Do you would like to add a membercount in the welcome picture which count the new user is on server?\n:ok: for yes or :x: for no")
+                                setFooter("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
                             }
-                            message.edit(stepFourEmbed).whenComplete { _, _ ->
-                                message.removeReactionsByEmoji(event.user.get(),
-                                    convertUnicode(":x:"),
-                                    convertUnicode(":ok:")
-                                )
+                            message.edit(stepFiveEmbed).whenComplete { _, _ ->
+                                message.removeReactionsByEmoji(event.user.get(), ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
                                 delete(message.id, 2)
                                 createListener(message, 4, memberID, welcomeChannel)
                             }
@@ -147,114 +160,95 @@ class SetWelcomeSystem : WelcomeCommand {
                 reactionmap[message.id] = listenerManager
             }
 
-            3 -> {
-                val listenerManager: ListenerManager<MessageCreateListener> =
-                    message.channel.addMessageCreateListener { event ->
-                        if (event.messageAuthor.id == memberID) {
-                            val welcomeMessage = event.messageContent
-                            if (welcomeMessage.length <= 170) {
-                                welcomeChannel?.welcomeMessage = welcomeMessage
-                                event.deleteMessage()
-
-                                val stepFourEmbed = createEmbed {
-                                    setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 4 of the Setup(Username?)")
-                                    setDescription("Do you would like to add the username with the discriminater (#0042 for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
-                                    setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
-                                }
-                                message.edit(stepFourEmbed).whenComplete { _, _ ->
-                                    message.addReactions(convertUnicode("\uD83C\uDD97"), convertUnicode("\u274C"))
-                                    delete(message.id, 1)
-                                    createListener(message, 4, memberID, welcomeChannel)
-                                }
-                            }
-                        }
-                    }
-                messagemap[message.id] = listenerManager
-            }
-
             4 -> {
                 val listenerManager: ListenerManager<ReactionAddListener> = message.addReactionAddListener { event ->
                     if (event.userId == memberID) {
-                        if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":ok:"))) {
-                            welcomeChannel?.userNamesAllowed = true
-                            val stepFiveEmbed = createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 5 of the Setup (Membercount)")
-                                setDescription("Do you would like to add a membercount in the welcome picture which count the new user is on server?\n:ok: for yes or :x: for no")
-                                setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
-                            }
-                            message.edit(stepFiveEmbed).whenComplete { _, _ ->
-                                message.removeReactionsByEmoji(
-                                    event.user.get(),
-                                    convertUnicode("\uD83C\uDD97"),
-                                    convertUnicode("\u274C")
-                                )
-                                delete(message.id, 2)
-                                createListener(message, 5, memberID, welcomeChannel)
-                            }
-                        } else if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":x:"))) {
-                            welcomeChannel?.userNamesAllowed = false
-                            val stepFiveEmbed = createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Step 5 of the Setup (Membercount)")
-                                setDescription("Do you would like to add a membercount in the welcome picture which count the new user is on server?\n:ok: for yes or :x: for no")
-                                setFooter("${convertUnicode("\uD83D\uDC4B")} | The Welcomer System").setTimestampToNow()
-                            }
-                            message.edit(stepFiveEmbed).whenComplete { _, _ ->
-                                message.removeReactionsByEmoji(event.user.get(),
-                                    convertUnicode("\uD83C\uDD97"),
-                                    convertUnicode("\u274C"))
-                                delete(message.id, 2)
-                                createListener(message, 5, memberID, welcomeChannel)
-                            }
-                        }
-                    }
-                }
-                reactionmap[message.id] = listenerManager
-            }
-
-            5 -> {
-                val listenerManager: ListenerManager<ReactionAddListener> = message.addReactionAddListener { event ->
-                    if (event.userId == memberID) {
-                        if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":ok:"))) {
-                            welcomeChannel?.memberCountAllowed = true
+                        if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":ok:"))) {
+                            welcomeChannel.memberCountAllowed = true
                             val serverID: Long = event.server.get().id
-                            welcomeMap[serverID] = welcomeChannel!!
+                            welcomeMap[serverID] = welcomeChannel
 
                             val finishedSetupEmbed = createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Finished Welcomer Setup", null, event.api.yourself.avatar)
+                                setAuthor("\uD83D\uDC4B | Finished Welcomer Setup", null, event.api.yourself.avatar)
                                 setDescription("The setup was finished by **${event.user.get().name}** for the textchannel " + "`${welcomeChannel.channelID?.let
                                 { event.server.get().getTextChannelById(it).get().name }}`")
                                 addInlineField("Welcome Message", welcomeChannel.welcomeMessage)
                                 addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?",
-                                    "The username in the picture ``${if (welcomeChannel.userNamesAllowed!!) "is allowed" else "isn't allowed"}``\n\n" +
-                                            "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false
+                                    "The username in the picture ``${if (welcomeChannel.userNamesAllowed) "is allowed" else "isn't allowed"}``\n\n" +
+                                            "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed) "is allowed" else "isn't allowed"}``\n\n" +
+                                            "React to the ${ClubyDiscordBot.convertUnicode(":exclamation:")} emoji if the settings are wrong.", false
                                 )
                                 setColor(Color.decode("0x32ff7e"))
                             }
                             message.edit(finishedSetupEmbed).whenComplete { _, _ ->
+                                message.removeReactionsByEmoji(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
+                                message.addReaction(ClubyDiscordBot.convertUnicode(":exclamation:"))
                                 stopTimer(message.id)
-                                message.removeAllReactions()
-                                event.api.threadPool.scheduler.schedule({ message.delete() }, 30, TimeUnit.SECONDS)
+                                event.api.threadPool.scheduler.schedule({ message.delete() }, 40, TimeUnit.SECONDS)
                                 delete(message.id, 2)
+
+                                message.addReactionAddListener { listener ->
+                                    if (listener.user.isPresent && listener.reaction.isPresent) {
+                                        if (listener.user.get().isBot.not()) {
+                                            if (listener.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))) {
+                                                welcomeMap.remove(serverID, welcomeChannel)
+                                                message.edit(createEmbed {
+                                                    setAuthor("👋 | Welcomersetup")
+                                                    setDescription("You deleted the welcome channel ${welcomeChannel.channelID.let {
+                                                        if (it != null) {
+                                                            event.server.get().getTextChannelById(it).get().name
+                                                        }
+                                                    }} from you server").setFooter("👋 | The Welcomer System").setTimestampToNow()
+                                                    setColor(Color.decode("0x32ff7e"))
+                                                })
+                                            }
+                                        }
+                                    }
+                                }.removeAfter(40, TimeUnit.SECONDS).addRemoveHandler {
+                                    message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
+                                }
                             }
-                        } else if (event.reaction.get().emoji.equalsEmoji(convertUnicode(":x:"))) {
-                            welcomeChannel?.memberCountAllowed = false
+                        } else if (event.reaction.get().emoji.equalsEmoji(":x:")) {
+                            welcomeChannel.memberCountAllowed = false
                             val serverID: Long = event.server.get().id
-                            welcomeMap[serverID] = welcomeChannel!!
+                            welcomeMap[serverID] = welcomeChannel
 
                             val finishedSetupEmbed = createEmbed {
-                                setAuthor("${convertUnicode("\uD83D\uDC4B")} | Finished Welcomer Setup", null, event.api.yourself.avatar)
+                                setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Finished Welcomer Setup", null, event.api.yourself.avatar)
                                 setDescription("The setup was finished by **${event.user.get().name}** for the textchannel " + "`${welcomeChannel.channelID?.let { event.server.get().getTextChannelById(it).get().name }}`")
                                 addInlineField("Welcome Message", "${welcomeChannel.welcomeMessage} \u00AD")
-                                addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?", "The username in the picture ``${if (welcomeChannel.userNamesAllowed!!) "is allowed" else "isn't allowed"}``\n\n" +
-                                            "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed!!) "is allowed" else "isn't allowed"}``", false
-                                )
+                                addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?", "The username in the picture ``${if (welcomeChannel.userNamesAllowed) "is allowed" else "isn't allowed"}``\n\n" +
+                                        "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed) "is allowed" else "isn't allowed"}``\n\n" +
+                                        "React to the ${ClubyDiscordBot.convertUnicode(":exclamation:")} emoji if the settings are wrong.", false)
                                 setColor(Color.decode("0x32ff7e"))
                             }
                             message.edit(finishedSetupEmbed).whenComplete { _, _ ->
+                                message.removeReactionsByEmoji(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
+                                message.addReaction(ClubyDiscordBot.convertUnicode(":exclamation:"))
                                 stopTimer(message.id)
-                                message.removeAllReactions()
-                                event.api.threadPool.scheduler.schedule({ message.delete() }, 30, TimeUnit.SECONDS)
+                                event.api.threadPool.scheduler.schedule({ message.delete() }, 40, TimeUnit.SECONDS)
                                 delete(message.id, 2)
+
+                                message.addReactionAddListener { listener ->
+                                    if (listener.user.isPresent && listener.reaction.isPresent) {
+                                        if (listener.user.get().isBot.not()) {
+                                            if (listener.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))) {
+                                                welcomeMap.remove(serverID, welcomeChannel)
+                                                message.edit(createEmbed {
+                                                    setAuthor("👋 | Welcomersetup")
+                                                    setDescription("You deleted the welcome channel ${welcomeChannel.channelID.let {
+                                                        if (it != null) {
+                                                            event.server.get().getTextChannelById(it).get().name
+                                                        }
+                                                    }} from you server").setFooter("👋 | The Welcomer System").setTimestampToNow()
+                                                    setColor(Color.decode("0x32ff7e"))
+                                                })
+                                            }
+                                        }
+                                    }
+                                }.removeAfter(40, TimeUnit.SECONDS).addRemoveHandler {
+                                    message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
+                                }
                             }
                         }
                     }
@@ -327,8 +321,7 @@ class SetWelcomeSystem : WelcomeCommand {
                     val userNameAllowed = resultSet.getBoolean("userNameAllowed")
                     val memberCountAllowed = resultSet.getBoolean("memberCountAllowed")
 
-                    val welcomeSystem =
-                        WelcomeSystem(welcomeChannelID, welcomeMessage, userNameAllowed, memberCountAllowed)
+                    val welcomeSystem = WelcomeSystem(welcomeChannelID, welcomeMessage, userNameAllowed, memberCountAllowed)
                     welcomeMap[guildID] = welcomeSystem
                 }
                 resultSet.close()

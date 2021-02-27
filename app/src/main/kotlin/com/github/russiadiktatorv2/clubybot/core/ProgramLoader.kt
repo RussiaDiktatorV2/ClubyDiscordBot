@@ -14,7 +14,6 @@ import com.github.russiadiktatorv2.clubybot.settings.ClubySettings
 import com.vdurmont.emoji.EmojiParser
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
-import org.javacord.api.entity.activity.ActivityType
 import org.javacord.api.entity.intent.Intent
 import java.io.IOException
 import java.util.concurrent.TimeUnit
