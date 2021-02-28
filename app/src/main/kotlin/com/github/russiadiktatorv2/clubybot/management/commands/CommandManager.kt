@@ -4,7 +4,7 @@ import com.github.russiadiktatorv2.clubybot.commands.DummyCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.HelpCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.ActivateModule
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.DisableModule
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.prefix.SetPrefixCommand
+import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
 import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.RemoveWelcomeSystem
 import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.SetWelcomeSystem
 import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent

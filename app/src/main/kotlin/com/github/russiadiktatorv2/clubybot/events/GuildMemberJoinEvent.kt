@@ -93,7 +93,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                                 g.drawString(memberMessage, ((width / 2) - (textWidth / 2)), (height / 1.08f).roundToInt())
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
-                            } else if (welcomeChannel?.userNamesAllowed!!.not() && welcomeChannel!!.memberCountAllowed!!.not()) {
+                            } else if (welcomeChannel.userNamesAllowed.not() && welcomeChannel.memberCountAllowed.not()) {
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
                             }
@@ -103,12 +103,9 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                         }
                         val baos = ByteArrayOutputStream()
                         ImageIO.write(image, "png", baos)
-                        welcomeChannel!!.channelID?.let {
-                            event.server.getTextChannelById(it).get().sendMessage(createEmbed {
-                                setDescription(welcomeChannel!!.welcomeMessage)
-                                setImage(ByteArrayInputStream(baos.toByteArray()), "WelcomeImage.png")
-                            })
-                        }
+                        MessageBuilder().append(welcomeChannel.welcomeMessage).appendNewLine()
+                            .setEmbed(createEmbed { setImage(ByteArrayInputStream(baos.toByteArray()), "WelcomeImage.png") })
+                            .setTts(false).send(event.server.getTextChannelById(welcomeChannel.channelID).get())
                     } catch (exception: IOException) {
                         throw RuntimeException(exception)
                     }

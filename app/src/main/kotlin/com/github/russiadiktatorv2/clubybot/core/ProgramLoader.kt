@@ -3,7 +3,7 @@
  */
 package com.github.russiadiktatorv2.clubybot.core
 
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.prefix.SetPrefixCommand
+import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
 import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.SetWelcomeSystem
 import com.github.russiadiktatorv2.clubybot.events.GuildMemberJoinEvent
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
@@ -14,6 +14,7 @@ import com.github.russiadiktatorv2.clubybot.settings.ClubySettings
 import com.vdurmont.emoji.EmojiParser
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
+import org.javacord.api.entity.activity.ActivityType
 import org.javacord.api.entity.intent.Intent
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -48,7 +49,7 @@ object ClubyDiscordBot {
     private fun changeActivity(discordApi: DiscordApi) {
         val statusList = arrayOf("${convertUnicode("\uD83D\uDD75\u200D♂")}️| with ${discordApi.servers.size} guilds",
             "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.10", "📡 | (East-Europe)").random()
-        discordApi.updateActivity(statusList, "https://www.twitch.tv/russiadiktaor")
+        discordApi.updateActivity(ActivityType.WATCHING, statusList)
     }
 
     private fun consoleListener(discordApi: DiscordApi) {
