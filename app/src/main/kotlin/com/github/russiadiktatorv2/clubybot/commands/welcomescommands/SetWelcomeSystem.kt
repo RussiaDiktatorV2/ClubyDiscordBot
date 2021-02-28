@@ -15,6 +15,7 @@ import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
 import org.javacord.api.listener.message.reaction.ReactionAddListener
 import org.javacord.api.util.event.ListenerManager
+import org.javacord.api.util.logging.ExceptionLogger
 import java.awt.Color
 import java.sql.SQLException
 import java.util.*
@@ -194,13 +195,13 @@ class SetWelcomeSystem : WelcomeCommand {
                                                 welcomeMap.remove(serverID, welcomeChannel)
                                                 message.edit(createEmbed {
                                                     setAuthor("👋 | Welcomersetup")
-                                                    setDescription("You deleted the welcome channel ${welcomeChannel.channelID.let {
-                                                        if (it != null) {
-                                                            event.server.get().getTextChannelById(it).get().name
-                                                        }
+                                                    setDescription("You deleted the welcome channel ${welcomeChannel.channelID?.let {
+                                                        event.server.get().getTextChannelById(it).get().name
                                                     }} from you server").setFooter("👋 | The Welcomer System").setTimestampToNow()
                                                     setColor(Color.decode("0x32ff7e"))
-                                                })
+                                                }).exceptionally(ExceptionLogger.get()).whenComplete { _, _ ->
+                                                    message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
+                                                }
                                             }
                                         }
                                     }
@@ -208,7 +209,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                     message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
                                 }
                             }
-                        } else if (event.reaction.get().emoji.equalsEmoji(":x:")) {
+                        } else if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":x:"))) {
                             welcomeChannel.memberCountAllowed = false
                             val serverID: Long = event.server.get().id
                             welcomeMap[serverID] = welcomeChannel
@@ -222,7 +223,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                         "React to the ${ClubyDiscordBot.convertUnicode(":exclamation:")} emoji if the settings are wrong.", false)
                                 setColor(Color.decode("0x32ff7e"))
                             }
-                            message.edit(finishedSetupEmbed).whenComplete { _, _ ->
+                            message.edit(finishedSetupEmbed).exceptionally(ExceptionLogger.get()).whenComplete { _, _ ->
                                 message.removeReactionsByEmoji(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
                                 message.addReaction(ClubyDiscordBot.convertUnicode(":exclamation:"))
                                 stopTimer(message.id)
@@ -236,13 +237,13 @@ class SetWelcomeSystem : WelcomeCommand {
                                                 welcomeMap.remove(serverID, welcomeChannel)
                                                 message.edit(createEmbed {
                                                     setAuthor("👋 | Welcomersetup")
-                                                    setDescription("You deleted the welcome channel ${welcomeChannel.channelID.let {
-                                                        if (it != null) {
-                                                            event.server.get().getTextChannelById(it).get().name
-                                                        }
+                                                    setDescription("You deleted the welcome channel ${welcomeChannel.channelID?.let {
+                                                        event.server.get().getTextChannelById(it).get().name
                                                     }} from you server").setFooter("👋 | The Welcomer System").setTimestampToNow()
                                                     setColor(Color.decode("0x32ff7e"))
-                                                })
+                                                }).exceptionally(ExceptionLogger.get()).whenComplete { _, _ ->
+                                                    message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
+                                                }
                                             }
                                         }
                                     }
