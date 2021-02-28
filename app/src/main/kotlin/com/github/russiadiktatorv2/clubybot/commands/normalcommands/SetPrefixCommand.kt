@@ -1,4 +1,4 @@
-package com.github.russiadiktatorv2.clubybot.commands.normalcommands.prefix
+package com.github.russiadiktatorv2.clubybot.commands.normalcommands
 
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
@@ -24,7 +24,7 @@ class SetPrefixCommand : CommandEvent {
             } else {
                 sendEmbed(event.channel, 20, TimeUnit.SECONDS) {
                     setAuthor("» Error to set a prefix")
-                    setDescription("Use `${prefixMap.getOrDefault(event.server.get().id, "!")}setprefix newprefix` to change the prefix of your server").setFooter("❗ | The prefix system").setTimestampToNow()
+                    setDescription("Use `${prefixMap.getOrDefault(event.server.get().id, "!")}setprefix newprefix` to change the prefix on your server").setFooter("❗ | The prefix system").setTimestampToNow()
                     setColor(Color.decode("0xf2310f"))
                 }
             }

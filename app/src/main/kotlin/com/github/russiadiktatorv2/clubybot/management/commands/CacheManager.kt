@@ -10,6 +10,6 @@ object CacheManager {
     val welcomeModule = mutableListOf<Long>()
 
     //Maps
-    var prefixMap: MutableMap<Long, String> = mutableMapOf()
+    var prefixMap = mutableMapOf<Long, String>()
     val welcomeMap = mutableMapOf<Long, WelcomeSystem>()
 }

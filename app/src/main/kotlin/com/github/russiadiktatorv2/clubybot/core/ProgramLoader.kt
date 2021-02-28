@@ -3,7 +3,7 @@
  */
 package com.github.russiadiktatorv2.clubybot.core
 
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.prefix.SetPrefixCommand
+import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
 import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.SetWelcomeSystem
 import com.github.russiadiktatorv2.clubybot.events.GuildMemberJoinEvent
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
@@ -38,7 +38,7 @@ object ClubyDiscordBot {
                 if (event.messageAuthor.asUser().isPresent && event.messageAuthor.asUser().get().isBot.not()) {
                     val customPrefix = prefixMap.getOrDefault(event.server.get().id, "!")
                     if (event.messageContent.startsWith(customPrefix)) {
-                        CommandManager().loadClubyCommands(event.messageContent.substring(ClubySettings.BOT_PREFIX.length).split(' ')[0], event, event.messageContent.split(' '))
+                        CommandManager().loadClubyCommands(event.messageContent.substring(customPrefix.length).split(' ')[0], event, event.messageContent.split(' '))
                     }
                 }
             }
@@ -49,7 +49,7 @@ object ClubyDiscordBot {
     private fun changeActivity(discordApi: DiscordApi) {
         val statusList = arrayOf("${convertUnicode("\uD83D\uDD75\u200D♂")}️| with ${discordApi.servers.size} guilds",
             "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.10", "📡 | (East-Europe)").random()
-        discordApi.updateActivity(statusList, "https://www.twitch.tv/russiadiktaor")
+        discordApi.updateActivity(ActivityType.WATCHING, statusList)
     }
 
     private fun consoleListener(discordApi: DiscordApi) {

@@ -25,21 +25,23 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
 
     override fun onServerMemberJoin(event: ServerMemberJoinEvent) {
         if (event.user.isBot.not()) {
-            var welcomeChannel: WelcomeSystem?
-            if (CacheManager.welcomeMap[event.server.id].also { welcomeChannel = it } != null) {
+            val welcomeChannel: WelcomeSystem? = CacheManager.welcomeMap[event.server.id]
+            if (welcomeChannel != null) {
                 event.user.avatar.asBufferedImage().thenAccept { avatar ->
                     try {
                         val image: BufferedImage = ImageIO.read(URI.create("https://media.discordapp.net/attachments/739079625413492767/800001453149388840/Background.png").toURL())
                         val g: Graphics = image.graphics
                         try {
                             if (g is Graphics2D) {
-                                g.setRenderingHint(KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY)
-                                g.setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
-                                g.setRenderingHint(KEY_COLOR_RENDERING, VALUE_COLOR_RENDER_QUALITY)
-                                g.setRenderingHint(KEY_DITHERING, VALUE_DITHER_ENABLE)
-                                g.setRenderingHint(KEY_FRACTIONALMETRICS, VALUE_FRACTIONALMETRICS_ON)
-                                g.setRenderingHint(KEY_INTERPOLATION, VALUE_INTERPOLATION_BILINEAR)
-                                g.setRenderingHint(KEY_RENDERING, VALUE_RENDER_QUALITY)
+                                g.apply {
+                                    setRenderingHint(KEY_ALPHA_INTERPOLATION, VALUE_ALPHA_INTERPOLATION_QUALITY)
+                                    setRenderingHint(KEY_ANTIALIASING, VALUE_ANTIALIAS_ON)
+                                    setRenderingHint(KEY_COLOR_RENDERING, VALUE_COLOR_RENDER_QUALITY)
+                                    setRenderingHint(KEY_DITHERING, VALUE_DITHER_ENABLE)
+                                    setRenderingHint(KEY_FRACTIONALMETRICS, VALUE_FRACTIONALMETRICS_ON)
+                                    setRenderingHint(KEY_INTERPOLATION, VALUE_INTERPOLATION_BILINEAR)
+                                    setRenderingHint(KEY_RENDERING, VALUE_RENDER_QUALITY)
+                                }
                             }
                             val width = image.width
                             val height = image.height
@@ -47,8 +49,8 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                             g.color = Color(0x2c2f33)
                             g.drawRect(0, 0, width - 1, height - 1)
 
-                            if (welcomeChannel?.userNamesAllowed == true && welcomeChannel?.memberCountAllowed == true) {
-                                val font = Font("sans-serif", Font.BOLD, 38)
+                            if (welcomeChannel.userNamesAllowed && welcomeChannel.memberCountAllowed) {
+                                var font = Font("sans-serif", Font.BOLD, 38)
 
                                 g.color = Color.GRAY
                                 g.font = font
@@ -56,17 +58,19 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                                 val fm = g.fontMetrics
                                 val textWidth = fm.stringWidth(event.user.discriminatedName)
 
-                                g.drawString(event.user.discriminatedName, ((width / 2) - (textWidth / 2)), (height / 1.08f).roundToInt())
-                                g.color = Color.GRAY
-                                g.font = font.deriveFont(60f)
-                                g.drawString("MEMBER", width / 36.6f.roundToInt(), height / 1.5f.roundToInt())
-                                g.color = Color.GRAY
-                                g.font = font.deriveFont(60f)
-                                g.drawString("#${event.server.members.filter { user: User -> user.isBot.not()}.count()}", (width / 1.2f).roundToInt(), (height / 1.99f).roundToInt())
-                                g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
-                                g.drawImage(avatar, 371, 100, 249, 249,null)
+                                g.apply {
+                                    drawString(event.user.discriminatedName, ((width / 2) - (textWidth / 2)), (height / 1.08f).roundToInt())
+                                    color = Color.GRAY
+                                    font = font.deriveFont(60f)
+                                    drawString("MEMBER", width / 36.6f.roundToInt(), height / 1.5f.roundToInt())
+                                    color = Color.GRAY
+                                    font = font.deriveFont(60f)
+                                    drawString("#${event.server.members.filter { user: User -> user.isBot.not()}.count()}", (width / 1.2f).roundToInt(), (height / 2.00f).roundToInt())
+                                    clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
+                                    drawImage(avatar, 371, 100, 249, 249,null)
+                                }
 
-                            } else if (welcomeChannel?.userNamesAllowed == true) {
+                            } else if (welcomeChannel.userNamesAllowed) {
                                 val font = Font("sans-serif", Font.BOLD, 38)
                                 g.color = Color.GRAY
                                 g.font = font
@@ -77,7 +81,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
 
-                            } else if (welcomeChannel?.memberCountAllowed == true) {
+                            } else if (welcomeChannel.memberCountAllowed) {
                                 val font = Font("sans-serif", Font.BOLD, 38)
 
                                 g.color = Color.GRAY
@@ -89,7 +93,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                                 g.drawString(memberMessage, ((width / 2) - (textWidth / 2)), (height / 1.08f).roundToInt())
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
-                            } else if (welcomeChannel?.userNamesAllowed!!.not() && welcomeChannel!!.memberCountAllowed!!.not()) {
+                            } else if (welcomeChannel.userNamesAllowed.not() && welcomeChannel.memberCountAllowed.not()) {
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
                             }
@@ -99,12 +103,9 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                         }
                         val baos = ByteArrayOutputStream()
                         ImageIO.write(image, "png", baos)
-                        welcomeChannel!!.channelID?.let {
-                            event.server.getTextChannelById(it).get().sendMessage(createEmbed {
-                                setDescription(welcomeChannel!!.welcomeMessage)
-                                setImage(ByteArrayInputStream(baos.toByteArray()), "WelcomeImage.png")
-                            })
-                        }
+                        MessageBuilder().append(welcomeChannel.welcomeMessage).appendNewLine()
+                            .setEmbed(createEmbed { setImage(ByteArrayInputStream(baos.toByteArray()), "WelcomeImage.png") })
+                            .setTts(false).send(event.server.getTextChannelById(welcomeChannel.channelID).get())
                     } catch (exception: IOException) {
                         throw RuntimeException(exception)
                     }

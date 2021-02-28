@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d8fa231-c420-4a23-9bc6-a02be22d0afd" name="Default Changelist" comment="Updated the gradle version from 6.8.2 to 6.8.3">
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="4d8fa231-c420-4a23-9bc6-a02be22d0afd" name="Default Changelist" comment="Changed a performance bug in the SetWelcomeSystem.kt Class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/prefix/SetPrefixCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/SetPrefixCommand.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/core/ProgramLoader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/core/ProgramLoader.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/MariaDB.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/MariaDB.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CommandManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CommandManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/data/WelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/data/WelcomeSystem.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -70,6 +73,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
@@ -107,18 +111,18 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="proofread" />
   </component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands" />
       <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands.module" />
       <recent name="com.github.russiadiktatorv2.clubybot.management.commands" />
-      <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands" />
       <recent name="com.github.russiadiktatorv2.clubybot.management.commands.commands" />
       <recent name="com.github.russiadiktatorv2.clubybot.management.commands.manage" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.Cluby [distTar]">
+  <component name="RunManager" selected="Application.ProgramLoaderKt">
     <configuration name="Cluby [distTar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -197,9 +201,10 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ProgramLoaderKt" />
+        <item itemvalue="Gradle.Cluby [distTar]" />
         <item itemvalue="Gradle.Cluby [installDist]" />
         <item itemvalue="Gradle.Cluby [distZip]" />
-        <item itemvalue="Gradle.Cluby [distTar]" />
       </list>
     </recent_temporary>
   </component>
@@ -247,7 +252,28 @@
       <option name="project" value="LOCAL" />
       <updated>1614282711244</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Changed the Welcomersetup to a better version.">
+      <created>1614363930211</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1614363930211</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added a remove handler in the welcomesystem but it isn't finished yet">
+      <created>1614467909703</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1614467909703</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Changed a performance bug in the SetWelcomeSystem.kt Class">
+      <created>1614505411452</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1614505411452</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -268,7 +294,10 @@
     <MESSAGE value="Updated the gradle version of the bot to 6.8.3" />
     <MESSAGE value="Changed a methode in the GuildMemberJoinEvent.kt" />
     <MESSAGE value="Updated the gradle version from 6.8.2 to 6.8.3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated the gradle version from 6.8.2 to 6.8.3" />
+    <MESSAGE value="Changed the Welcomersetup to a better version." />
+    <MESSAGE value="Added a remove handler in the welcomesystem but it isn't finished yet" />
+    <MESSAGE value="Changed a performance bug in the SetWelcomeSystem.kt Class" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed a performance bug in the SetWelcomeSystem.kt Class" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
