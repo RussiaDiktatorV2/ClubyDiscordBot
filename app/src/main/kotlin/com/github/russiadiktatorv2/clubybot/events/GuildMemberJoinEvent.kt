@@ -83,7 +83,6 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
 
                             } else if (welcomeChannel.memberCountAllowed) {
                                 val font = Font("sans-serif", Font.BOLD, 38)
-
                                 g.color = Color.GRAY
                                 g.font = font
                                 g.font = font.deriveFont(65f)
@@ -94,8 +93,10 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                                 g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
                                 g.drawImage(avatar, 371, 100, 249, 249,null)
                             } else if (welcomeChannel.userNamesAllowed.not() && welcomeChannel.memberCountAllowed.not()) {
-                                g.clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
-                                g.drawImage(avatar, 371, 100, 249, 249,null)
+                                g.apply {
+                                    clip = Ellipse2D.Float(371F,  100F, 249F, 249F)
+                                    drawImage(avatar, 371, 100, 249, 249,null)
+                                }
                             }
 
                         } finally {

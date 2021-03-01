@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit
 class RemoveWelcomeSystem : WelcomeCommand {
 
     override fun executeWelcomeCommands(command: String, event: MessageCreateEvent, arguments: List<String>) {
+        event.deleteMessage()
         if (event.server.get().hasAnyPermission(event.messageAuthor.asUser().get(), PermissionType.MANAGE_SERVER, PermissionType.ADMINISTRATOR)) {
             if (event.messageAuthor.asUser().isPresent && arguments.size == 1) {
                 val serverID = event.server.get().id

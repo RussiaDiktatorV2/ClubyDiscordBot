@@ -183,7 +183,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                     addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?",
                                         "The username in the picture ``${if (welcomeChannel.userNamesAllowed) "is allowed" else "isn't allowed"}``\n\n" +
                                                 "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed) "is allowed" else "isn't allowed"}``\n\n" +
-                                                "React to the ❗ emoji if the settings are wrong.", false
+                                                "React to the ``❗`` emoji if the settings are wrong.", false
                                     )
                                     setColor(Color.decode("0x32ff7e"))
                                 }
@@ -211,7 +211,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                                 }
                                             }
                                         }
-                                    }.removeAfter(40, TimeUnit.SECONDS).addRemoveHandler {
+                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler {
                                         message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
                                     }
                                 }
@@ -226,7 +226,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                     addInlineField("Welcome Message", "${welcomeChannel.welcomeMessage} \u00AD")
                                     addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?", "The username in the picture ``${if (welcomeChannel.userNamesAllowed) "is allowed" else "isn't allowed"}``\n\n" +
                                             "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed) "is allowed" else "isn't allowed"}``\n\n" +
-                                            "React to the ❗ emoji if the settings are wrong.\n", false)
+                                            "React to the ``❗`` emoji if the settings are wrong.\n", false)
                                     setColor(Color.decode("0x32ff7e"))
                                 }
                                 message.edit(finishedSetupEmbed).exceptionally(ExceptionLogger.get()).whenComplete { _, _ ->
