@@ -2,6 +2,7 @@ package com.github.russiadiktatorv2.clubybot.management.commands
 
 import com.github.russiadiktatorv2.clubybot.commands.DummyCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.HelpCommand
+import com.github.russiadiktatorv2.clubybot.commands.normalcommands.IdCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.ActivateModule
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.DisableModule
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
@@ -57,6 +58,7 @@ class CommandManager {
         normalCommands["removemodule"] = DisableModule()
 
         normalCommands["prefix"] = SetPrefixCommand()
+        normalCommands["getid"] = IdCommand()
 
         normalCommands["dummy"] = DummyCommand()
 

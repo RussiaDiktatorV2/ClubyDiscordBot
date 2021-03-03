@@ -16,6 +16,7 @@ import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import org.javacord.api.entity.activity.ActivityType
 import org.javacord.api.entity.intent.Intent
+import org.javacord.api.entity.user.UserStatus
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -30,7 +31,7 @@ object ClubyDiscordBot {
             .addServerMemberJoinListener(GuildMemberJoinEvent())
             .login().join()
         discordApi.setMessageCacheSize(0, 0)
-        discordApi.setReconnectDelay { reconnectDelay -> reconnectDelay * 3 }
+        discordApi.setReconnectDelay { reconnectDelay -> reconnectDelay * 2 }
         discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( {changeActivity(discordApi)}, 0, 2, TimeUnit.MINUTES)
 
         discordApi.addMessageCreateListener { event ->
@@ -43,23 +44,12 @@ object ClubyDiscordBot {
                 }
             }
         }
-        consoleListener(discordApi)
     }
 
     private fun changeActivity(discordApi: DiscordApi) {
         val statusList = arrayOf("${convertUnicode("\uD83D\uDD75\u200D♂")}️| with ${discordApi.servers.size} guilds",
             "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.10", "📡 | (East-Europe)").random()
         discordApi.updateActivity(ActivityType.WATCHING, statusList)
-    }
-
-    private fun consoleListener(discordApi: DiscordApi) {
-        Thread {
-            try {
-
-                if (readLine() == "stop") { discordApi.disconnect(); MariaDB.disconnect() }
-
-            } catch (_: IOException) { }
-        }.start()
     }
 
     private fun autoCache() {
