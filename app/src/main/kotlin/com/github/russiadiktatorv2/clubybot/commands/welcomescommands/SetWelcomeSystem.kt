@@ -211,9 +211,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                                 }
                                             }
                                         }
-                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler {
-                                        message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
-                                    }
+                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler { message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:")) }
                                 }
                             } else if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":x:"))) {
                                 welcomeChannel.memberCountAllowed = false
@@ -253,9 +251,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                                 }
                                             }
                                         }
-                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler {
-                                        message.removeOwnReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
-                                    }
+                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler { message.removeOwnReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:")) }
                                 }
                             }
                         }
