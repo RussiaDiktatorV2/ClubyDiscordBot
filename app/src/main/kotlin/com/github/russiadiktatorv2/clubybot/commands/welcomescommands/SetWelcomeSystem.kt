@@ -311,27 +311,4 @@ class SetWelcomeSystem : WelcomeCommand {
         timerMap[messageid]?.cancel()
         timerMap.remove(messageid)
     }
-
-    fun loadWelcomeSystemCache() {
-        val resultSet = MariaDB.onQuery("SELECT * FROM welcomeSystems")
-
-        try {
-            if (resultSet != null) {
-                while (resultSet.next()) {
-
-                    val guildID = resultSet.getLong("serverID")
-                    val welcomeChannelID = resultSet.getLong("welcomeChannelID")
-                    val welcomeMessage = resultSet.getString("welcomeMessage")
-                    val userNameAllowed = resultSet.getBoolean("userNameAllowed")
-                    val memberCountAllowed = resultSet.getBoolean("memberCountAllowed")
-
-                    val welcomeSystem = WelcomeSystem(welcomeChannelID, welcomeMessage, userNameAllowed, memberCountAllowed)
-                    welcomeMap[guildID] = welcomeSystem
-                }
-                resultSet.close()
-            }
-        } catch (exception: SQLException) {
-            exception.errorCode
-        }
-    }
 }

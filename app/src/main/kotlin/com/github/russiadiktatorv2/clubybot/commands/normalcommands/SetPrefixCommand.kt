@@ -4,13 +4,11 @@ import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.pre
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendPrefixIsSame
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendPrefixWasChanged
-import com.github.russiadiktatorv2.clubybot.management.database.MariaDB
 import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent
 import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
-import java.sql.SQLException
 import java.util.concurrent.TimeUnit
 
 class SetPrefixCommand : CommandEvent {
@@ -53,25 +51,6 @@ class SetPrefixCommand : CommandEvent {
                 prefixMap.remove(serverID)
                 textChannel.sendPrefixWasChanged(textChannel.api, currentPrefix, "!")
             }
-        }
-    }
-
-    fun loadPrefixCache() {
-        val resultSet = MariaDB.onQuery("SELECT * FROM customPrefixes")
-
-        try {
-            if (resultSet != null) {
-                while (resultSet.next()) {
-
-                    val prefix = resultSet.getString("prefix")
-                    val guildID = resultSet.getLong("serverID")
-
-                    prefixMap[guildID] = prefix
-                }
-                resultSet.close()
-            }
-        } catch (exception: SQLException) {
-            exception.errorCode
         }
     }
 }

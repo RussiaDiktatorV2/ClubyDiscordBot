@@ -3,10 +3,8 @@
  */
 package com.github.russiadiktatorv2.clubybot.core
 
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
-import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.SetWelcomeSystem
 import com.github.russiadiktatorv2.clubybot.events.GuildMemberJoinEvent
-import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager
+import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.loadClubyCache
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.moderationModule
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.ticketMap
@@ -21,14 +19,12 @@ import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import org.javacord.api.entity.activity.ActivityType
 import org.javacord.api.entity.intent.Intent
-import org.javacord.api.entity.user.UserStatus
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 object ClubyDiscordBot {
 
     init {
-        CacheManager.loadCLubyCache()
+        loadClubyCache()
 
         val discordApi = DiscordApiBuilder().setToken(ClubySettings.BOT_TOKEN).setWaitForUsersOnStartup(false).setWaitForServersOnStartup(false)
             .setIntents(Intent.GUILDS, Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS)
