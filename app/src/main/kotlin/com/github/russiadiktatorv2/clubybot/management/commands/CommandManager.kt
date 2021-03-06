@@ -1,6 +1,7 @@
 package com.github.russiadiktatorv2.clubybot.management.commands
 
 import com.github.russiadiktatorv2.clubybot.commands.DummyCommand
+import com.github.russiadiktatorv2.clubybot.commands.devcommands.ContributorCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.HelpCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.IdCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.ActivateModule
@@ -45,7 +46,7 @@ class CommandManager {
 
         else if (this.welcomeCommands[command].also { welcomeCommand = it } != null) {
             if (CacheManager.welcomeModule.contains(event.server.get().id).not()) {
-                welcomeCommand?.executeWelcomeCommands(command, event, arguments)
+                welcomeCommand?.executeWelcomeCommands(command, event,arguments)
             }
         }
     }
@@ -61,6 +62,7 @@ class CommandManager {
         normalCommands["getid"] = IdCommand()
 
         normalCommands["dummy"] = DummyCommand()
+        normalCommands["contributor"] = ContributorCommand()
 
         //Moderation Commands
 

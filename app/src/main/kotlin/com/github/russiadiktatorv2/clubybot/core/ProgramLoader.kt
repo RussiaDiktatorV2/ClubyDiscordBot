@@ -16,23 +16,22 @@ import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import org.javacord.api.entity.activity.ActivityType
 import org.javacord.api.entity.intent.Intent
-import org.javacord.api.entity.user.UserStatus
-import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 object ClubyDiscordBot {
 
     init {
+
         SetPrefixCommand().loadPrefixCache()
         SetWelcomeSystem().loadWelcomeSystemCache()
 
         val discordApi = DiscordApiBuilder().setToken(ClubySettings.BOT_TOKEN).setWaitForUsersOnStartup(false).setWaitForServersOnStartup(false)
-            .setIntents(Intent.GUILDS, Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS)
-            .addServerMemberJoinListener(GuildMemberJoinEvent())
-            .login().join()
+                .setIntents(Intent.GUILDS, Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS)
+                .addServerMemberJoinListener(GuildMemberJoinEvent())
+                .login().join()
         discordApi.setMessageCacheSize(0, 0)
         discordApi.setReconnectDelay { reconnectDelay -> reconnectDelay * 2 }
-        discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( {changeActivity(discordApi)}, 0, 2, TimeUnit.MINUTES)
+        discordApi.threadPool.daemonScheduler.scheduleAtFixedRate({ changeActivity(discordApi) }, 0, 2, TimeUnit.MINUTES)
 
         discordApi.addMessageCreateListener { event ->
             if (event.server.isPresent && event.isServerMessage) {
@@ -48,7 +47,7 @@ object ClubyDiscordBot {
 
     private fun changeActivity(discordApi: DiscordApi) {
         val statusList = arrayOf("${convertUnicode("\uD83D\uDD75\u200D♂")}️| with ${discordApi.servers.size} guilds",
-            "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.10", "📡 | (East-Europe)").random()
+                "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.10", "📡 | (East-Europe)").random()
         discordApi.updateActivity(ActivityType.WATCHING, statusList)
     }
 
@@ -64,9 +63,10 @@ object ClubyDiscordBot {
         //Moderation Cache
     }
 
-    fun convertUnicode(unicodeID: String) : String {
+    fun convertUnicode(unicodeID: String): String {
         return EmojiParser.parseToUnicode(unicodeID)
     }
+
 }
 
 fun main() {
