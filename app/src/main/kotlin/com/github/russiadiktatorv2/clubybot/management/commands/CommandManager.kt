@@ -4,6 +4,7 @@ import com.github.russiadiktatorv2.clubybot.commands.DummyCommand
 import com.github.russiadiktatorv2.clubybot.commands.devcommands.ContributorCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.HelpCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.IdCommand
+import com.github.russiadiktatorv2.clubybot.commands.normalcommands.RestartCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.ActivateModule
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.DisableModule
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
@@ -63,6 +64,7 @@ class CommandManager {
 
         normalCommands["dummy"] = DummyCommand()
         normalCommands["contributor"] = ContributorCommand()
+        normalCommands["restart"] = RestartCommand()
 
         //Moderation Commands
 

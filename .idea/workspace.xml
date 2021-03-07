@@ -4,15 +4,131 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4d8fa231-c420-4a23-9bc6-a02be22d0afd" name="Default Changelist" comment="Changed a performance bug in the SetWelcomeSystem.kt Class">
+    <list default="true" id="4d8fa231-c420-4a23-9bc6-a02be22d0afd" name="Default Changelist" comment="(+) Contributor-System (ContributorCommand)">
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/META-INF/app.kotlin_module" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/DummyCommand$executeCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/DummyCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/HelpCommand$executeCommand$1$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/HelpCommand$executeCommand$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/HelpCommand$executeCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/HelpCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand$executeCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand$executeCommand$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand$executeCommand$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand$executeCommand$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand$executeCommand$5.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand$executeCommand$6.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/SetPrefixCommand$executeCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/SetPrefixCommand$executeCommand$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/SetPrefixCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$3$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$4$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$5$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$5.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$6$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1$6.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$createModuleListener$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$executeCommand$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule$executeCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$3$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$4$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$5$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$5.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$6$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1$6.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$createModuleListener$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$executeCommand$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule$executeCommand$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/DisableModule.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem$executeWelcomeCommands$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem$executeWelcomeCommands$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem$executeWelcomeCommands$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$1$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$1$stepFourEmbed$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$1$stepThreeEmbed$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$2$stepFourEmbed$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$3$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$3$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$3$stepFiveEmbed$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$3$stepFiveEmbed$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$1$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$1$2$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$1$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$1$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$2$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$2$2$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$2$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$2$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$finishedSetupEmbed$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4$finishedSetupEmbed$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$createListener$listenerManager$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$executeWelcomeCommands$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$executeWelcomeCommands$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$executeWelcomeCommands$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$executeWelcomeCommands$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$executeWelcomeCommands$setupEmbed$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$startTimer$task$1$run$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$startTimer$task$1$run$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem$startTimer$task$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/core/ClubyDiscordBot$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/core/ClubyDiscordBot$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/core/ClubyDiscordBot$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/core/ClubyDiscordBot.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/core/ProgramLoaderKt.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent$onServerMemberJoin$1$4.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent$onServerMemberJoin$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/CacheManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/CommandManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/data/WelcomeSystem.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendEmbed$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendEmbed$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendMissingArguments$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendMissingArguments$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendMissingArguments$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendPrefixIsSame$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendPrefixIsSame$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendPrefixIsSame$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendPrefixWasChanged$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendPrefixWasChanged$2$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt$sendPrefixWasChanged$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/commands/handling/HandlingKt.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/database/MariaDB.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/database/TableManager.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/interfaces/CommandEvent.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/interfaces/ModerationCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/interfaces/TicketCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/management/interfaces/WelcomeCommand.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/out/production/classes/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/RestartCommand.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/prefix/SetPrefixCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/SetPrefixCommand.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/RemoveWelcomeSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/core/ProgramLoader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/core/ProgramLoader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/devcommands/ContributorCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/devcommands/ContributorCommand.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CommandManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CommandManager.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/data/WelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/data/WelcomeSystem.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -83,16 +199,6 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="GroovyConsoleState">
-    <option name="list">
-      <list>
-        <Entry>
-          <option name="moduleName" value="Cluby.app.main" />
-          <option name="url" value="file://$APPLICATION_CONFIG_DIR$/consoles/groovy/groovy_console.groovy" />
-        </Entry>
-      </list>
-    </option>
-  </component>
   <component name="ProjectId" id="1nyu9Nb4dxEeT7Mj0UXIQ3qRpOD" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -106,23 +212,35 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="proofread" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands.devcommands" />
       <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands" />
       <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands.module" />
       <recent name="com.github.russiadiktatorv2.clubybot.management.commands" />
       <recent name="com.github.russiadiktatorv2.clubybot.management.commands.commands" />
-      <recent name="com.github.russiadiktatorv2.clubybot.management.commands.manage" />
     </key>
   </component>
   <component name="RunManager" selected="Application.ProgramLoaderKt">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Cluby [distTar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -202,9 +320,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.ProgramLoaderKt" />
-        <item itemvalue="Gradle.Cluby [distTar]" />
         <item itemvalue="Gradle.Cluby [installDist]" />
         <item itemvalue="Gradle.Cluby [distZip]" />
+        <item itemvalue="Gradle.Cluby [distTar]" />
       </list>
     </recent_temporary>
   </component>
@@ -216,6 +334,26 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1612374501709</updated>
+      <workItem from="1614879571120" duration="812000" />
+      <workItem from="1614880811236" duration="792000" />
+      <workItem from="1614935784819" duration="1811000" />
+      <workItem from="1614939861929" duration="83000" />
+      <workItem from="1614958987194" duration="2124000" />
+      <workItem from="1614962271574" duration="1620000" />
+      <workItem from="1614963958981" duration="1699000" />
+      <workItem from="1614967565072" duration="1255000" />
+      <workItem from="1614968841619" duration="105000" />
+      <workItem from="1614972455741" duration="6007000" />
+      <workItem from="1614980602681" duration="1219000" />
+      <workItem from="1615024807190" duration="8516000" />
+      <workItem from="1615038780558" duration="2694000" />
+      <workItem from="1615055619712" duration="109000" />
+      <workItem from="1615055738462" duration="660000" />
+      <workItem from="1615056416040" duration="985000" />
+      <workItem from="1615058794783" duration="69000" />
+      <workItem from="1615058875144" duration="463000" />
+      <workItem from="1615063305142" duration="86000" />
+      <workItem from="1615115195065" duration="1112000" />
     </task>
     <task id="LOCAL-00001" summary="Changed Database and the Prefix of the bot.">
       <created>1614273449082</created>
@@ -273,8 +411,18 @@
       <option name="project" value="LOCAL" />
       <updated>1614505411452</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="(+) Contributor-System (ContributorCommand)">
+      <created>1615041329614</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1615041329614</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -297,7 +445,8 @@
     <MESSAGE value="Changed the Welcomersetup to a better version." />
     <MESSAGE value="Added a remove handler in the welcomesystem but it isn't finished yet" />
     <MESSAGE value="Changed a performance bug in the SetWelcomeSystem.kt Class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed a performance bug in the SetWelcomeSystem.kt Class" />
+    <MESSAGE value="(+) Contributor-System (ContributorCommand)" />
+    <option name="LAST_COMMIT_MESSAGE" value="(+) Contributor-System (ContributorCommand)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
