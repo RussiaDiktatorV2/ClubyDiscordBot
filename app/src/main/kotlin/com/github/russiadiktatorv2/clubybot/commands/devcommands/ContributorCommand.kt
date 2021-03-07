@@ -77,7 +77,7 @@ class ContributorCommand : CommandEvent {
                         setAuthor("💻 | The Cluby Contributor-List",null, event.api.yourself.avatar)
                     }
                 } else {
-                    event.channel.sendMessage("The list is empty.").thenAccept {
+                    event.channel.sendMessage("The list is empty.").thenAcceptAsync {
                         event.api.threadPool.scheduler.schedule({ it.delete() },5, TimeUnit.SECONDS)
                     }
                 }
