@@ -15,7 +15,7 @@ class IdCommand : CommandEvent {
             val textChannelIDsBuilder = StringBuilder("Following textchannels has a valid id ↓").append("\n\n")
             event.message.mentionedChannels.map { serverTextChannel -> serverTextChannel.mentionTag.plus(" -> ${serverTextChannel.id}") }.forEach { message -> textChannelIDsBuilder.append("$message\n") }
 
-            sendEmbed(event.channel, 1, TimeUnit.MINUTES) {
+            sendEmbed(event.serverTextChannel.get(), 1, TimeUnit.MINUTES) {
                 setDescription(textChannelIDsBuilder.toString())
                 setColor(Color.decode("0x32ff7e"))
             }
@@ -23,7 +23,7 @@ class IdCommand : CommandEvent {
             val roleIDsBuilder = StringBuilder("Following roles has a valid id ↓").append("\n\n")
             event.message.mentionedRoles.map { roles -> roles.mentionTag.plus(" -> ${roles.id}") }.forEach { message -> roleIDsBuilder.append("$message\n") }
 
-            sendEmbed(event.channel, 1, TimeUnit.MINUTES) {
+            sendEmbed(event.serverTextChannel.get(), 1, TimeUnit.MINUTES) {
                 setDescription(roleIDsBuilder.toString())
                 setColor(Color.decode("0x32ff7e"))
             }

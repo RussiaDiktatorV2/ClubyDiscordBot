@@ -20,23 +20,23 @@ class RemoveWelcomeSystem : WelcomeCommand {
                 if (welcomeMap.containsKey(serverID)) {
                     welcomeMap.remove(serverID)
 
-                    sendEmbed(event.channel, 30, TimeUnit.SECONDS) {
+                    sendEmbed(event.serverTextChannel.get(), 30, TimeUnit.SECONDS) {
                         setAuthor("👋 | Welcomer System")
                         setDescription("You deleted the welcomechannel of **${event.server.get().name}**!").setFooter("👋 | The Welcomer System").setTimestampToNow()
                         setColor(Color.decode("0x32ff7e"))
                     }
                 } else {
-                    sendEmbed(event.channel, 20, TimeUnit.SECONDS) {
+                    sendEmbed(event.serverTextChannel.get(), 20, TimeUnit.SECONDS) {
                         setAuthor("👋 | Welcomer System")
                         setDescription("Your server don't have a welcomechannel").setFooter("👋 | Maybe you try to set a welcomechannel?").setTimestampToNow()
                         setColor(Color.decode("0xf2310f"))
                     }
                 }
             } else {
-                event.channel.sendMissingArguments("removewelcome", "Welcome", event.server.get())
+                event.serverTextChannel.ifPresent { channel -> channel.sendMissingArguments("removewelcome", "Welcome", event.server.get()) }
             }
         } else {
-            sendEmbed(event.channel, 13, TimeUnit.SECONDS) {
+            sendEmbed(event.serverTextChannel.get(), 13, TimeUnit.SECONDS) {
                 setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Problem with the Setup")
                 setDescription("You don't have the required permissions `${PermissionType.MANAGE_SERVER}` to execute the following command").setFooter("👋 | Welcomer System")
                 setColor(Color.decode("0x32ff7e"))

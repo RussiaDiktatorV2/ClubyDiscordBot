@@ -27,7 +27,7 @@ object ClubyDiscordBot {
         loadClubyCache()
 
         val discordApi = DiscordApiBuilder().setToken(ClubySettings.BOT_TOKEN).setWaitForUsersOnStartup(false).setWaitForServersOnStartup(false)
-            .setIntents(Intent.GUILDS, Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS)
+            .setIntents(Intent.GUILDS, Intent.GUILD_MEMBERS, Intent.GUILD_MESSAGES, Intent.GUILD_MESSAGE_REACTIONS,Intent.GUILD_VOICE_STATES)
             .addServerMemberJoinListener(GuildMemberJoinEvent())
             .login().join()
         discordApi.setMessageCacheSize(0, 0)

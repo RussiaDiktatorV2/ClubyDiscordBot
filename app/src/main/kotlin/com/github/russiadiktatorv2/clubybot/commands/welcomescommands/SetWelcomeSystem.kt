@@ -49,17 +49,17 @@ class SetWelcomeSystem : WelcomeCommand {
                     }
 
                 } else {
-                    sendEmbed(event.channel, 20, TimeUnit.SECONDS) {
+                    sendEmbed(event.serverTextChannel.get(), 20, TimeUnit.SECONDS) {
                         setAuthor("👋 | Problem with the Setup")
                         setDescription("Your server have already a welcomechannel").setFooter("👋 | Delete or update a welcomechannel").setTimestampToNow()
                         setColor(Color.decode("0xf2310f"))
                     }
                 }
             } else {
-                event.channel.sendMissingArguments("setwelcome textchanelid", "Welcome", event.server.get())
+                event.serverTextChannel.ifPresent { channel -> channel.sendMissingArguments("setwelcome textchanelid", "Welcome", event.server.get()) }
             }
         } else {
-            sendEmbed(event.channel, 13, TimeUnit.SECONDS) {
+            sendEmbed(event.serverTextChannel.get(), 13, TimeUnit.SECONDS) {
                 setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Problem with the Setup")
                 setDescription("You don't have the required permissions `${PermissionType.MANAGE_SERVER}` to execute the following command").setFooter("👋 | Welcomer System")
                 setColor(Color.decode("0x32ff7e"))

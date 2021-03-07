@@ -6,6 +6,7 @@ import com.github.russiadiktatorv2.clubybot.commands.normalcommands.IdCommand
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.ActivateModule
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.DisableModule
 import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
+import com.github.russiadiktatorv2.clubybot.commands.ticketcommands.SetTicketSystem
 import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.RemoveWelcomeSystem
 import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.SetWelcomeSystem
 import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent
@@ -65,6 +66,7 @@ class CommandManager {
         //Moderation Commands
 
         //Ticket Commands
+        ticketCommands["setticket"] = SetTicketSystem()
 
         //Welcome Commands
         welcomeCommands["setwelcome"] = SetWelcomeSystem()

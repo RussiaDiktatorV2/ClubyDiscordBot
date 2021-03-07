@@ -4,6 +4,7 @@ import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot
 import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot.convertUnicode
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
 import org.javacord.api.DiscordApi
+import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.message.embed.EmbedBuilder
@@ -19,7 +20,7 @@ fun createEmbed(init: EmbedBuilder.() -> Unit) : EmbedBuilder {
     return embedBuilder
 }
 
-fun sendEmbed(textChannel: TextChannel, time: Long, timeUnit: TimeUnit ,init: EmbedBuilder.() -> Unit) : EmbedBuilder {
+fun sendEmbed(textChannel: ServerTextChannel, time: Long, timeUnit: TimeUnit ,init: EmbedBuilder.() -> Unit) : EmbedBuilder {
     val embedBuilder = EmbedBuilder()
     embedBuilder.init()
     textChannel.sendMessage(embedBuilder).thenAccept {
@@ -28,7 +29,7 @@ fun sendEmbed(textChannel: TextChannel, time: Long, timeUnit: TimeUnit ,init: Em
     return embedBuilder
 }
 
-fun TextChannel.sendMissingArguments(arguments: String, commandName: String, guild: Server) {
+fun ServerTextChannel.sendMissingArguments(arguments: String, commandName: String, guild: Server) {
     sendMessage(createEmbed {
         setAuthor("${convertUnicode(":exclamation:")} | » Missing Arguments")
         setDescription("Use `${prefixMap.getOrDefault(guild.id, "!")}$arguments` to execute the `$commandName` command").setFooter("Write the right arguments to execute the following command").setTimestampToNow()
@@ -75,7 +76,7 @@ fun Message.sendModuleIsAlreadyDisabled(discordApi: DiscordApi, moduleName: Stri
 
 //Prefix command handling
 
-fun TextChannel.sendPrefixWasChanged(discordApi: DiscordApi, currentPrefix: String, newPrefix: String) {
+fun ServerTextChannel.sendPrefixWasChanged(discordApi: DiscordApi, currentPrefix: String, newPrefix: String) {
     sendMessage(createEmbed {
         setAuthor("» The Prefix was changed", null, discordApi.yourself.avatar)
         setDescription("You changed the prefix `$currentPrefix` to `$newPrefix`")
@@ -84,7 +85,7 @@ fun TextChannel.sendPrefixWasChanged(discordApi: DiscordApi, currentPrefix: Stri
     }
 }
 
-fun TextChannel.sendPrefixIsSame(discordApi: DiscordApi) {
+fun ServerTextChannel.sendPrefixIsSame(discordApi: DiscordApi) {
     sendMessage(createEmbed {
         setAuthor("» Problem to change the prefix", null, discordApi.yourself.avatar)
         setDescription("You can't set the same prefix on you server").setTimestampToNow().setColor(Color.decode("0xf2310f")) }).thenAccept {
