@@ -11,15 +11,18 @@ import java.util.concurrent.TimeUnit
 import java.awt.Color
 class ContributorCommand : CommandEvent {
 
+    val ownerID = 433307484166422538
+    val serverID = 795462575503573013
+
     override fun executeCommand(command: String, event: MessageCreateEvent, arguments: List<String>) {
         event.deleteMessage()
-        if (event.messageAuthor.asUser().get().id == 433307484166422538) {
+        if (event.messageAuthor.asUser().get().id == ownerID) {
             if (arguments.size == 3) {
                 when (arguments[1]) {
                     "add" -> {
                         try {
                             val id = arguments[2].toLong()
-                            if (event.server.get().id == 795462575503573013) {
+                            if (event.server.get().id == serverID) {
                                 if (event.server.get().getMemberById(id).isPresent) {
                                     if (! CacheManager.devList.contains(id)) {
                                         event.channel.sendMessage("Erfolgreich.")
