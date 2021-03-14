@@ -8,6 +8,7 @@ import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.entity.permission.PermissionType
+import org.javacord.api.entity.server.Server
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.util.concurrent.TimeUnit

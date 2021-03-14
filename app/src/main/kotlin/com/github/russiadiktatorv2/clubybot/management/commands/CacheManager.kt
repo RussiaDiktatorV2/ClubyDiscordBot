@@ -12,6 +12,7 @@ object CacheManager {
     val moderationModule = mutableListOf<Long>()
     val ticketModule = mutableListOf<Long>()
     val welcomeModule = mutableListOf<Long>()
+    val devList = mutableListOf<Long>()
 
     //Maps
     val prefixMap = mutableMapOf<Long, String>()
