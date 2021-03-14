@@ -25,6 +25,9 @@ dependencies {
     // Use the Javacord Library to create a discord bot.
     implementation("org.javacord:javacord:3.1.2")
 
+    //Use the Lavaplayer to stream music in a high quality
+    implementation("com.sedmelluq:lavaplayer:1.3.72")
+
     //Use the Emoji Library to encode evert emoji with UTF-8
     implementation("com.vdurmont:emoji-java:5.1.1")
 

@@ -49,17 +49,17 @@ class SetWelcomeSystem : WelcomeCommand {
                     }
 
                 } else {
-                    sendEmbed(event.channel, 20, TimeUnit.SECONDS) {
+                    sendEmbed(event.serverTextChannel.get(), 20, TimeUnit.SECONDS) {
                         setAuthor("👋 | Problem with the Setup")
                         setDescription("Your server have already a welcomechannel").setFooter("👋 | Delete or update a welcomechannel").setTimestampToNow()
                         setColor(Color.decode("0xf2310f"))
                     }
                 }
             } else {
-                event.channel.sendMissingArguments("setwelcome textchanelid", "Welcome", event.server.get())
+                event.serverTextChannel.ifPresent { channel -> channel.sendMissingArguments("setwelcome textchanelid", "Welcome", event.server.get()) }
             }
         } else {
-            sendEmbed(event.channel, 13, TimeUnit.SECONDS) {
+            sendEmbed(event.serverTextChannel.get(), 13, TimeUnit.SECONDS) {
                 setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Problem with the Setup")
                 setDescription("You don't have the required permissions `${PermissionType.MANAGE_SERVER}` to execute the following command").setFooter("👋 | Welcomer System")
                 setColor(Color.decode("0x32ff7e"))
@@ -211,9 +211,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                                 }
                                             }
                                         }
-                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler {
-                                        message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
-                                    }
+                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler { message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:")) }
                                 }
                             } else if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":x:"))) {
                                 welcomeChannel.memberCountAllowed = false
@@ -253,9 +251,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                                 }
                                             }
                                         }
-                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler {
-                                        message.removeOwnReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
-                                    }
+                                    }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler { message.removeOwnReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:")) }
                                 }
                             }
                         }
@@ -314,28 +310,5 @@ class SetWelcomeSystem : WelcomeCommand {
 
         timerMap[messageid]?.cancel()
         timerMap.remove(messageid)
-    }
-
-    fun loadWelcomeSystemCache() {
-        val resultSet = MariaDB.onQuery("SELECT * FROM welcomeSystems")
-
-        try {
-            if (resultSet != null) {
-                while (resultSet.next()) {
-
-                    val guildID = resultSet.getLong("serverID")
-                    val welcomeChannelID = resultSet.getLong("welcomeChannelID")
-                    val welcomeMessage = resultSet.getString("welcomeMessage")
-                    val userNameAllowed = resultSet.getBoolean("userNameAllowed")
-                    val memberCountAllowed = resultSet.getBoolean("memberCountAllowed")
-
-                    val welcomeSystem = WelcomeSystem(welcomeChannelID, welcomeMessage, userNameAllowed, memberCountAllowed)
-                    welcomeMap[guildID] = welcomeSystem
-                }
-                resultSet.close()
-            }
-        } catch (exception: SQLException) {
-            exception.errorCode
-        }
     }
 }

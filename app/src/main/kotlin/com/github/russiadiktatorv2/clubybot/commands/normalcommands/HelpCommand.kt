@@ -12,6 +12,7 @@ class HelpCommand : CommandEvent {
 
     override fun executeCommand(command: String, event: MessageCreateEvent, arguments: List<String>) {
         event.message.delete()
+
         event.serverTextChannel.ifPresent { textChannel ->
             textChannel.sendMessage(
                 EmbedBuilder()
