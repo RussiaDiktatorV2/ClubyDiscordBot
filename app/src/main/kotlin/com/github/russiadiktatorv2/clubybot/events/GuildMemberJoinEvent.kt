@@ -104,7 +104,7 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                         }
                         val baos = ByteArrayOutputStream()
                         ImageIO.write(image, "png", baos)
-                        MessageBuilder().append(welcomeChannel.welcomeMessage).appendNewLine()
+                        MessageBuilder().append(if (welcomeChannel.welcomeMessage != null) "${welcomeChannel.welcomeMessage}" else "").appendNewLine()
                             .setEmbed(createEmbed { setImage(ByteArrayInputStream(baos.toByteArray()), "WelcomeImage.png") })
                             .setTts(false).send(event.server.getTextChannelById(welcomeChannel.channelID).get())
                     } catch (exception: IOException) {

@@ -5,25 +5,35 @@ package com.github.russiadiktatorv2.clubybot.core
 
 import com.github.russiadiktatorv2.clubybot.events.GuildMemberJoinEvent
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.loadClubyCache
-import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.moderationModule
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
-import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.ticketMap
-import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.ticketModule
-import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.welcomeMap
-import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.welcomeModule
 import com.github.russiadiktatorv2.clubybot.management.commands.CommandManager
-import com.github.russiadiktatorv2.clubybot.management.database.MariaDB
+import com.github.russiadiktatorv2.clubybot.management.database.MongoDB
 import com.github.russiadiktatorv2.clubybot.settings.ClubySettings
 import com.vdurmont.emoji.EmojiParser
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import org.javacord.api.entity.activity.ActivityType
 import org.javacord.api.entity.intent.Intent
+import org.javacord.api.entity.user.UserStatus
+import org.litote.kmongo.KMongo
 import java.util.concurrent.TimeUnit
 
 object ClubyDiscordBot {
 
+    val mongoClient = KMongo.createClient("")
+
     init {
+        loadClubyCache()
+
+        val discordApi = DiscordApiBuilder().setToken(ClubySettings.BOT_TOKEN)
+            .setAllIntentsExcept(Intent.GUILD_WEBHOOKS, Intent.GUILD_PRESENCES, Intent.GUILD_INVITES, Intent.GUILD_INTEGRATIONS, Intent.GUILD_EMOJIS, Intent.GUILD_BANS, Intent.DIRECT_MESSAGE_TYPING, Intent.GUILD_MESSAGE_TYPING, Intent.GUILD_MEMBERS)
+            .addServerMemberJoinListener(GuildMemberJoinEvent())
+            .login().join()
+        discordApi.setMessageCacheSize(0, 0)
+        discordApi.setReconnectDelay { reconnectDelay -> reconnectDelay * 2 }
+        //discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( { autoCache()} , 0, 12, TimeUnit.HOURS)
+        discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( {changeActivity(discordApi)}, 0, 2, TimeUnit.MINUTES)
+        stopProgram(discordApi)
 
         discordApi.addMessageCreateListener { event ->
             if (event.server.isPresent && event.isServerMessage) {
@@ -37,38 +47,30 @@ object ClubyDiscordBot {
         }
     }
 
+    private fun stopProgram(discordApi: DiscordApi) {
+        return Thread {
+
+            if (readLine().equals("stop")) {
+                discordApi.updateStatus(UserStatus.OFFLINE)
+                discordApi.disconnect()
+
+                MongoDB.addDocuments()
+                mongoClient.close()
+            }
+        }.start()
+    }
+
     private fun changeActivity(discordApi: DiscordApi) {
         val statusList = arrayOf("${convertUnicode("\uD83D\uDD75\u200D♂")}️| with ${discordApi.servers.size} guilds",
-                "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.10", "📡 | (East-Europe)").random()
+            "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.15", "📡 | (East-Europe)").random()
         discordApi.updateActivity(ActivityType.WATCHING, statusList)
     }
 
-    private fun autoCache() {
-        //Prefix Cache
-        prefixMap.forEach { (serverID, prefix) -> MariaDB.connection?.prepareStatement("INSERT OR REPLACE INTO customPrefixes(serverID, prefix) VALUES($serverID, $prefix)")?.execute() }
-
-        //Ticket Cache
-        ticketMap.forEach { (serverID, ticketChannel) -> MariaDB.connection?.prepareStatement("INSERT INTO REPLACE INTO ticketSystem(serverID, ticketChannelID, ticketMessage) VALUES($serverID, ${ticketChannel.channelID}, ${ticketChannel.ticketMessage})")?.execute() }
-
-        //Welcome Cache
-        welcomeMap.forEach { (serverID, welcomeChannel) -> MariaDB.connection?.prepareStatement("INSERT OR REPLACE INTO welcomeSystems(serverID, welcomeChannelID, welcomeMessage, userNameAllowed, memberCountAllowed) VALUES($serverID, ${welcomeChannel.channelID}, ${welcomeChannel.welcomeMessage}, ${welcomeChannel.userNamesAllowed}, ${welcomeChannel.memberCountAllowed})")?.execute() }
-
-        //Moderation Cache
-
-
-        //Module Cache
-        moderationModule.forEach { serverID -> MariaDB.connection?.prepareStatement("INSERT OR REPLACE INTO moderationModule(serverID) VALUES($serverID)")?.execute() }
-        ticketModule.forEach { serverID -> MariaDB.connection?.prepareStatement("INSERT OR REPLACE INTO ticketModule(serverID) VALUES($serverID)")?.execute() }
-        welcomeModule.forEach { serverID -> MariaDB.connection?.prepareStatement("INSERT INTO REPLACE INTO welcomeModule(serverID) VALUES($serverID)")?.execute() }
-    }
-
-    fun convertUnicode(unicodeID: String): String {
+    fun convertUnicode(unicodeID: String) : String {
         return EmojiParser.parseToUnicode(unicodeID)
     }
-
 }
 
 fun main() {
-    MariaDB.connect()
     ClubyDiscordBot
 }

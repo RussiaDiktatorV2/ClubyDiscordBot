@@ -1,6 +1,6 @@
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.4.30"
+    id("org.jetbrains.kotlin.jvm") version "1.4.31"
 
     // Apply the application plugin to add support for building a CLI application in Java.
     application
@@ -31,8 +31,8 @@ dependencies {
     //Use the Emoji Library to encode evert emoji with UTF-8
     implementation("com.vdurmont:emoji-java:5.1.1")
 
-    //Use the mysql connector driver to connect into the cluby database
-    implementation("mysql:mysql-connector-java:8.0.23")
+    //Use MongoDB to save the documents in a database
+    implementation("org.litote.kmongo:kmongo:4.2.4")
 }
 
 application {

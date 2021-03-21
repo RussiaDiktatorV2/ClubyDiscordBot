@@ -1,8 +1,10 @@
 package com.github.russiadiktatorv2.clubybot.commands
 
+import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager
 import com.github.russiadiktatorv2.clubybot.management.commands.CommandManager
 import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent
+import org.bson.Document
 import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.server.Server
 import org.javacord.api.event.message.MessageCreateEvent
@@ -21,5 +23,6 @@ class DummyCommand : CommandEvent {
             .append("🕵️‍♂️ | My current rest ping is ${event.api.measureRestLatency().join().toMillis()}ms").appendNewLine().appendNewLine()
             .append("🧔 | My current Ram Usage: ${(Runtime.getRuntime().totalMemory().minus(Runtime.getRuntime().freeMemory())).div(1024 * 1024)}%")
             .send(event.channel).thenAccept { it.addReactions("👮‍♂️", "👼", "👨‍🦰", "👲", "🕵️‍♀") }
+
     }
 }

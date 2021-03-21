@@ -15,7 +15,7 @@ class IdCommand : CommandEvent {
         event.deleteMessage()
         if (event.message.mentionedChannels.isNotEmpty()) {
             val textChannelIDsBuilder = StringBuilder("Following textchannels has a valid id ↓").append("\n\n")
-            event.message.mentionedChannels.map { serverTextChannel -> serverTextChannel.mentionTag.plus(" -> ${serverTextChannel.id}") }.forEach { message -> textChannelIDsBuilder.append("$message\n") }
+            event.message.mentionedChannels.map { roles -> roles.mentionTag.plus(" -> ${roles.id}") }.forEach { message -> textChannelIDsBuilder.append("$message\n") }
 
             sendEmbed(event.serverTextChannel.get(), 1, TimeUnit.MINUTES) {
                 setDescription(textChannelIDsBuilder.toString())

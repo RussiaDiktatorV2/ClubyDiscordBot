@@ -1,4 +1,4 @@
-package com.github.russiadiktatorv2.clubybot.commands.normalcommands
+package com.github.russiadiktatorv2.clubybot.commands.devcommands
 
 import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent
 import org.javacord.api.DiscordApi
@@ -12,8 +12,6 @@ class RestartCommand : CommandEvent {
 
         event.deleteMessage()
         if (event.server.get().hasAnyPermission(event.messageAuthor.asUser().get(), PermissionType.ADMINISTRATOR)) {
-
-
 
         }
     }

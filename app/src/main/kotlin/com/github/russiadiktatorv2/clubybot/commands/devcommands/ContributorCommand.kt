@@ -74,7 +74,7 @@ class ContributorCommand : CommandEvent {
                 if (CacheManager.devList.size > 0) {
                     val stringBuilder: StringBuilder = StringBuilder("~~----------~~ \n\n")
                     CacheManager.devList.forEach { contributor -> stringBuilder.append("${event.server.get().getHighestRole(event.server.get().getMemberById(contributor).get()).get().mentionTag} ↣ ${event.api.getUserById(contributor).get().name} \n") }
-                    sendEmbed(event.channel,15, TimeUnit.DAYS) {
+                    sendEmbed(event.serverTextChannel.get(),15, TimeUnit.DAYS) {
                         addInlineField("Contributor-List:", stringBuilder.toString())
                         setColor(Color.decode("0x32ff7e"))
                         setAuthor("💻 | The Cluby Contributor-List",null, event.api.yourself.avatar)

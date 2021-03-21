@@ -6,7 +6,6 @@ import com.github.russiadiktatorv2.clubybot.management.commands.data.WelcomeSyst
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendMissingArguments
-import com.github.russiadiktatorv2.clubybot.management.database.MariaDB
 import com.github.russiadiktatorv2.clubybot.management.interfaces.WelcomeCommand
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
@@ -17,7 +16,6 @@ import org.javacord.api.listener.message.reaction.ReactionAddListener
 import org.javacord.api.util.event.ListenerManager
 import org.javacord.api.util.logging.ExceptionLogger
 import java.awt.Color
-import java.sql.SQLException
 import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
@@ -37,9 +35,9 @@ class SetWelcomeSystem : WelcomeCommand {
                             setFooter("👋 | The Welcomer System")
                         }
                         try {
-                            event.channel.sendMessage(setupEmbed).thenAccept { it.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
+                            event.serverTextChannel.ifPresent { channel -> channel.sendMessage(setupEmbed).thenAccept { it.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
                                 createListener(it, 1, event.messageAuthor.asUser().get().id, welcomeSystem)
-                                startTimer(it)
+                                startTimer(it) }
                             }
                         } catch (exception: InterruptedException) {
                             exception.printStackTrace()
@@ -110,25 +108,27 @@ class SetWelcomeSystem : WelcomeCommand {
 
             2 -> {
                 val listenerManager: ListenerManager<MessageCreateListener> = message.channel.addMessageCreateListener { event ->
-                        if (event.messageAuthor.id == memberID) {
-                            val welcomeMessage = event.messageContent
-                            if (welcomeMessage.length <= 170) {
-                                welcomeChannel.welcomeMessage = welcomeMessage
-                                event.deleteMessage()
+                        if (event.messageAuthor.asUser().isPresent) {
+                            if (event.messageAuthor.asUser().get().id == memberID) {
+                                val welcomeMessage = event.messageContent
+                                if (welcomeMessage.length <= 170) {
+                                    welcomeChannel.welcomeMessage = welcomeMessage
+                                    event.deleteMessage()
 
-                                val stepFourEmbed = createEmbed {
-                                    setAuthor("👋 | Step 4 of the Setup(Username?)")
-                                    setDescription("Do you would like to add the username with the discriminater (${event.api.getUserById(433307484166422538).get().discriminatedName} for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
-                                    setFooter("👋 | The Welcomer System").setTimestampToNow()
-                                }
-                                message.edit(stepFourEmbed).whenComplete { _, _ ->
-                                    message.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
-                                    delete(message.id, 1)
-                                    createListener(message, 3, memberID, welcomeChannel)
+                                    val stepFourEmbed = createEmbed {
+                                        setAuthor("👋 | Step 4 of the Setup(Username?)")
+                                        setDescription("Do you would like to add the username with the discriminater (${event.api.getUserById(433307484166422538).get().discriminatedName} for example) in the welcome picture?\n\n" + ":ok: for yes or :x: for no")
+                                        setFooter("👋 | The Welcomer System").setTimestampToNow()
+                                    }
+                                    message.edit(stepFourEmbed).whenComplete { _, _ ->
+                                        message.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
+                                        delete(message.id, 1)
+                                        createListener(message, 3, memberID, welcomeChannel)
+                                    }
                                 }
                             }
                         }
-                    }
+                }
                 messagemap[message.id] = listenerManager
             }
 
@@ -179,7 +179,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                 val finishedSetupEmbed = createEmbed {
                                     setAuthor("👋 | Finished Welcomer Setup", null, event.api.yourself.avatar)
                                     setDescription("The setup was finished by **${event.user.get().name}** for the textchannel `${event.server.get().getTextChannelById(welcomeChannel.channelID).get().name}`")
-                                    addInlineField("Welcome Message", welcomeChannel.welcomeMessage)
+                                    addInlineField("Welcome Message", if (welcomeChannel.welcomeMessage != null) "${welcomeChannel.welcomeMessage}" else "null")
                                     addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?",
                                         "The username in the picture ``${if (welcomeChannel.userNamesAllowed) "is allowed" else "isn't allowed"}``\n\n" +
                                                 "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed) "is allowed" else "isn't allowed"}``\n\n" +
@@ -221,7 +221,7 @@ class SetWelcomeSystem : WelcomeCommand {
                                 val finishedSetupEmbed = createEmbed {
                                     setAuthor("👋 | Finished Welcomer Setup", null, event.api.yourself.avatar)
                                     setDescription("The setup was finished by **${event.user.get().name}** for the textchannel `${event.server.get().getTextChannelById(welcomeChannel.channelID).get().name}`")
-                                    addInlineField("Welcome Message", "${welcomeChannel.welcomeMessage} \u00AD")
+                                    addInlineField("Welcome Message", "${if (welcomeChannel.welcomeMessage != null) "${welcomeChannel.welcomeMessage}" else "null"} \u00AD")
                                     addField("👨 Username in Picture? | 👨‍🎓 Membercount in Picture?", "The username in the picture ``${if (welcomeChannel.userNamesAllowed) "is allowed" else "isn't allowed"}``\n\n" +
                                             "The membercount in the picture ``${if (welcomeChannel.memberCountAllowed) "is allowed" else "isn't allowed"}``\n\n" +
                                             "React to the ``❗`` emoji if the settings are wrong.\n", false)
@@ -302,7 +302,7 @@ class SetWelcomeSystem : WelcomeCommand {
                 timerMap.remove(message.id)
             }
         }
-        timer.schedule(task, (5 * 60000).toLong())
+        timer.schedule(task, (4 * 60000).toLong())
         timerMap[message.id] = task
     }
 
