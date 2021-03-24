@@ -2,12 +2,17 @@ package com.github.russiadiktatorv2.clubybot.commands.ticketcommands
 
 import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.ticketMap
+import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
+import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.data.TicketSystem
+import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
-import com.github.russiadiktatorv2.clubybot.management.interfaces.TicketCommand
+import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
+import org.javacord.api.entity.server.Server
+import org.javacord.api.entity.user.User
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
 import org.javacord.api.listener.message.reaction.ReactionAddListener
@@ -17,42 +22,47 @@ import java.awt.Color
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class SetTicketSystem : TicketCommand {
+@LoadCommand
+class SetTicketSystem : Command("setTicket", CommandModule.TICKET, "ticket") {
+    private val messageMap = mutableMapOf<Long, ListenerManager<MessageCreateListener>>()
+    private val reactionMap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
-    override fun executeTicketCommands(command: String, event: MessageCreateEvent, arguments: List<String>) {
-        if (event.server.get().hasAnyPermission(event.messageAuthor.asUser().get(), PermissionType.MANAGE_SERVER, PermissionType.ADMINISTRATOR)) {
-            event.deleteMessage()
-            if (arguments.size == 2) { val ticketChannelID: Long = arguments[1].toLong()
-                if (event.server.flatMap { server -> server.getTextChannelById(ticketChannelID) }.isPresent) {
-                    if (!ticketMap.containsKey(ticketChannelID)) {
-                        val ticketSystem = TicketSystem("%name%", null, null)
+    override fun executeCommand(
+        server: Server,
+        user: User,
+        textChannel: ServerTextChannel,
+        message: Message,
+        args: Array<out String>
+    ) {
+        message.delete()
+        if (args.size == 2) {
+            val ticketChannelID: Long = args[1].toLong()
 
-                        val ticketSetupEmbed = createEmbed {
-                            setAuthor("🎟 | Step 2 of the Setup", null, event.api.yourself.avatar)
-                            setDescription("You can chose between two emojis.\n:ok: for a custom channel name or :x: to set the username as channel name")
-                            setFooter("👋 | The Ticket System")
-                        }
-                        event.serverTextChannel.ifPresent { channel -> channel.sendMessage(ticketSetupEmbed).thenAccept {
-                            it.addReactions(ClubyDiscordBot.convertUnicode(":ok:"), ClubyDiscordBot.convertUnicode(":x:"))
-                            createTicketListener(it, 1, event.messageAuthor.asUser().get().id, ticketChannelID,  ticketSystem)
-                            startTimer(it)
-                        }}
+            if (!ticketMap.containsKey(ticketChannelID)) {
+                val ticketSystem = TicketSystem("%name%", null, null)
 
-                    } else {
-                        sendEmbed(event.serverTextChannel.get(), 20, TimeUnit.SECONDS) {
-                            setAuthor("🎟 | Problem with the Setup")
-                            setDescription("The channel ``${event.server.get().getTextChannelById(ticketChannelID).get().name}`` is already a ticket channel").setFooter("🎟 | Delete or update a ticketchannel").setTimestampToNow()
-                            setColor(Color.decode("0xf2310f"))
-                        }
-                    }
+                val ticketSetupEmbed = createEmbed {
+                    setAuthor("🎟 | Step 2 of the Setup", null, server.api.yourself.avatar)
+                    setDescription("You can chose between two emojis.\n:ok: for a custom channel name or :x: to set the username as channel name")
+                    setFooter("👋 | The Ticket System")
+                }
+
+                textChannel.sendMessage(ticketSetupEmbed).thenAccept {
+                    it.addReactions(ClubyDiscordBot.convertUnicode(":ok:"), ClubyDiscordBot.convertUnicode(":x:"))
+                    createTicketListener(it, 1, user.id, ticketChannelID,  ticketSystem)
+                    startTimer(it)
+                }
+            } else {
+                sendEmbed(textChannel, 20, TimeUnit.SECONDS) {
+                    setAuthor("🎟 | Problem with the Setup")
+                    setDescription("The channel ``${server.getTextChannelById(ticketChannelID).get().name}`` is already a ticket channel").setFooter("🎟 | Delete or update a ticketchannel").setTimestampToNow()
+                    setColor(Color.decode("0xf2310f"))
                 }
             }
+
         }
+
     }
-
-    private val messageMap = mutableMapOf<Long, ListenerManager<MessageCreateListener>>()
-
-    private val reactionMap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
     private fun createTicketListener(message: Message, state: Int, memberID: Long, channelID: Long, ticketChannel: TicketSystem) {
         when (state) {
@@ -237,4 +247,13 @@ class SetTicketSystem : TicketCommand {
         timerMap[messageid]?.cancel()
         timerMap.remove(messageid)
     }
+
+
+
+    override val permissions: MutableList<PermissionType>
+        get() = mutableListOf(PermissionType.MANAGE_SERVER, PermissionType.ADMINISTRATOR)
+    override val description: String
+        get() = TODO("Not yet implemented")
+    override val usage: String
+        get() = TODO("Not yet implemented")
 }

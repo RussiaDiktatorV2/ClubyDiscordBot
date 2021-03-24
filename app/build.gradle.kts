@@ -33,6 +33,9 @@ dependencies {
 
     //Use MongoDB to save the documents in a database
     implementation("org.litote.kmongo:kmongo:4.2.4")
+
+    // Add Reflections for annotation use
+    implementation("net.oneandone.reflections8:reflections8:0.11.7")
 }
 
 application {

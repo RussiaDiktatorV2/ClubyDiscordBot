@@ -1,84 +1,112 @@
 package com.github.russiadiktatorv2.clubybot.management.commands
 
-import com.github.russiadiktatorv2.clubybot.commands.DummyCommand
-import com.github.russiadiktatorv2.clubybot.commands.devcommands.ContributorCommand
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.HelpCommand
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.IdCommand
-import com.github.russiadiktatorv2.clubybot.commands.devcommands.RestartCommand
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.ActivateModule
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.module.DisableModule
-import com.github.russiadiktatorv2.clubybot.commands.normalcommands.SetPrefixCommand
-import com.github.russiadiktatorv2.clubybot.commands.ticketcommands.CreateTicket
-import com.github.russiadiktatorv2.clubybot.commands.ticketcommands.SetTicketSystem
-import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.RemoveWelcomeSystem
-import com.github.russiadiktatorv2.clubybot.commands.welcomescommands.SetWelcomeSystem
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
+import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
+import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
+import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
-import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent
-import com.github.russiadiktatorv2.clubybot.management.interfaces.ModerationCommand
-import com.github.russiadiktatorv2.clubybot.management.interfaces.TicketCommand
-import com.github.russiadiktatorv2.clubybot.management.interfaces.WelcomeCommand
-import org.javacord.api.event.message.MessageCreateEvent
+import org.javacord.api.entity.channel.ServerTextChannel
+import org.javacord.api.entity.message.Message
+import org.javacord.api.entity.server.Server
+import org.javacord.api.entity.user.User
+import org.reflections8.Reflections
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
-class CommandManager {
+object CommandManager {
+    val commands = mutableMapOf<String, Command>()
 
-    val normalCommands = mutableMapOf<String, CommandEvent>()
-    val moderationCommand = mutableMapOf<String, ModerationCommand>()
-    val welcomeCommands = mutableMapOf<String, WelcomeCommand>()
-    val ticketCommands = mutableMapOf<String, TicketCommand>()
+    fun loadCommands() {
+        val reflections: Reflections = Reflections("com.github.russiadiktatorv2.clubybot.commands")
 
-    fun loadClubyCommands(command: String, event: MessageCreateEvent, arguments: List<String>) {
-        var commandEvent: CommandEvent?
-        var moderationCommand: ModerationCommand?
-        var ticketCommand: TicketCommand?
-        var welcomeCommand: WelcomeCommand?
+        for (clazz in reflections.getTypesAnnotatedWith(LoadCommand::class.java, true)) {
+            val obj = clazz.getDeclaredConstructor().newInstance()
 
-        if (event.serverTextChannel.isPresent) {
-            if (this.normalCommands[command].also { commandEvent = it } != null) {
-                commandEvent?.executeCommand(command, event, arguments)
-            }
+            if (obj is Command)
+                registerCommand(obj)
 
-            else if (this.moderationCommand[command].also { moderationCommand = it } != null) {
-                if (CacheManager.moderationModule.contains(event.server.get().id).not()) {
-                    moderationCommand?.executeModerationCommands(command, event, arguments)
+        }
+    }
+
+    fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message) {
+        val msg: String = message.content
+        val args: Array<String> = if (msg.contains(" ")) msg.substring(msg.split(" ")[0].length + 1).split(" ")
+            .toTypedArray() else emptyArray()
+        val commandName: String =
+            msg.substring(CacheManager.prefixMap.getOrDefault(server.id, "!").length).split(" ")[0].toLowerCase()
+
+        if (!commands.containsKey(commandName)) return
+
+        val command: Command? = commands[commandName]
+        val module: CommandModule? = command?.module
+
+        var hasPermission: Boolean = false
+
+        for (permission in server.getHighestRole(user).get().allowedPermissions) {
+            if (server.hasPermission(user, permission))
+                hasPermission = true
+        }
+
+        if (hasPermission) {
+            when (module) {
+                CommandModule.MODERATION -> {
+                    if (CacheManager.moderationModule.contains(server.id))
+                        command.executeCommand(server, user, textChannel, message, args)
+                    else
+                        sendEmbed(textChannel, 15, TimeUnit.SECONDS) {
+                            setTitle("❌ Failed to execute the following command")
+                            setDescription("Your server does not have the ``moderation`` module enabled")
+                            setColor(Color.decode("0xf2310f"))
+                        }
                 }
-            }
 
-            else if (this.ticketCommands[command].also { ticketCommand = it } != null) {
-                if (CacheManager.ticketModule.contains(event.server.get().id).not()) {
-                    ticketCommand?.executeTicketCommands(command, event, arguments)
-                } else {
-                    sendEmbed(event.serverTextChannel.get(), 15, TimeUnit.SECONDS) {
-                        setTitle("❌ Error to execute the following command")
-                        setDescription("The server must have activated the module ``ticket`` to execute the ticket commands")
-                        setColor(Color.decode("0xf2310f"))
-                    }
+                CommandModule.TICKET -> {
+                    if (CacheManager.ticketModule.contains(server.id))
+                        command.executeCommand(server, user, textChannel, message, args)
+                    else
+                        sendEmbed(textChannel, 15, TimeUnit.SECONDS) {
+                            setTitle("❌ Failed to execute the following command")
+                            setDescription("Your server does not have the ``ticket`` module enabled")
+                            setColor(Color.decode("0xf2310f"))
+                        }
                 }
-            }
 
-            else if (this.welcomeCommands[command].also { welcomeCommand = it } != null) {
-                if (CacheManager.welcomeModule.contains(event.server.get().id).not()) {
-                    welcomeCommand?.executeWelcomeCommands(command, event,arguments)
+                CommandModule.WELCOME -> {
+                    if (CacheManager.welcomeModule.contains(server.id))
+                        command.executeCommand(server, user, textChannel, message, args)
+                    else
+                        sendEmbed(textChannel, 15, TimeUnit.SECONDS) {
+                            setTitle("❌ Failed to execute the following command")
+                            setDescription("Your server does not have the ``welcome`` module enabled")
+                            setColor(Color.decode("0xf2310f"))
+                        }
                 }
+
+                else -> command?.executeCommand(server, user, textChannel, message, args)
             }
         }
     }
 
-    init {
+    private fun registerCommand(command: Command) {
+        commands[command.name] = command
+
+        for (alias in command.aliases) {
+            commands[alias] = command
+        }
+    }
+
+    /*init {
         //Normal Commands
-        normalCommands["help"] = HelpCommand()
+        normalCommands["help"] = HelpICommand()
 
         normalCommands["addmodule"] = ActivateModule()
         normalCommands["removemodule"] = DisableModule()
 
-        normalCommands["prefix"] = SetPrefixCommand()
-        normalCommands["getid"] = IdCommand()
+        normalCommands["prefix"] = SetPrefixICommand()
+        normalCommands["getid"] = IdICommand()
 
-        normalCommands["dummy"] = DummyCommand()
-        normalCommands["contributor"] = ContributorCommand()
-        normalCommands["restart"] = RestartCommand()
+        normalCommands["dummy"] = DummyICommand()
+        normalCommands["contributor"] = ContributorICommand()
+        normalCommands["restart"] = RestartICommand()
 
         //Moderation Commands
 
@@ -90,5 +118,5 @@ class CommandManager {
         //Welcome Commands
         welcomeCommands["setwelcome"] = SetWelcomeSystem()
         welcomeCommands["removewelcome"] = RemoveWelcomeSystem()
-    }
+    }*/
 }
