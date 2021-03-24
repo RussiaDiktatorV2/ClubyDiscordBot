@@ -4,6 +4,7 @@
 package com.github.russiadiktatorv2.clubybot.core
 
 import com.github.russiadiktatorv2.clubybot.events.GuildMemberJoinEvent
+import com.github.russiadiktatorv2.clubybot.events.MessageListener
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.loadClubyCache
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
 import com.github.russiadiktatorv2.clubybot.management.commands.CommandManager
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit
 
 object ClubyDiscordBot {
 
-    val mongoClient = KMongo.createClient("")
+    val mongoClient = KMongo.createClient("mongodb://localhost")
 
     init {
         loadClubyCache()
@@ -33,18 +34,11 @@ object ClubyDiscordBot {
         discordApi.setReconnectDelay { reconnectDelay -> reconnectDelay * 2 }
         //discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( { autoCache()} , 0, 12, TimeUnit.HOURS)
         discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( {changeActivity(discordApi)}, 0, 2, TimeUnit.MINUTES)
+        println("Bot started")
         stopProgram(discordApi)
 
-        discordApi.addMessageCreateListener { event ->
-            if (event.server.isPresent && event.isServerMessage) {
-                if (event.messageAuthor.asUser().isPresent && event.messageAuthor.asUser().get().isBot.not()) {
-                    val customPrefix = prefixMap.getOrDefault(event.server.get().id, "!")
-                    if (event.messageContent.startsWith(customPrefix)) {
-                        CommandManager().loadClubyCommands(event.messageContent.substring(customPrefix.length).split(' ')[0], event, event.messageContent.split(' '))
-                    }
-                }
-            }
-        }
+        CommandManager.loadCommands()
+        discordApi.addMessageCreateListener(MessageListener())
     }
 
     private fun stopProgram(discordApi: DiscordApi) {

@@ -2,38 +2,39 @@ package com.github.russiadiktatorv2.clubybot.commands.normalcommands.module
 
 import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot.convertUnicode
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager
+import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
+import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendModuleIsAlreadyEnabled
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendModuleWasActivateMessage
-import com.github.russiadiktatorv2.clubybot.management.interfaces.CommandEvent
+import com.github.russiadiktatorv2.clubybot.management.commands.interfaces.ICommand
 import org.javacord.api.DiscordApi
+import org.javacord.api.entity.channel.ServerTextChannel
+import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.message.embed.EmbedBuilder
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
+import org.javacord.api.entity.user.User
 import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
-class ActivateModule : CommandEvent {
+class ActivateModule : Command("activateModule", CommandModule.DEFAULT) {
+    override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
+        message.delete()
 
-    override fun executeCommand(command: String, event: MessageCreateEvent, arguments: List<String>) {
-        if (event.server.get().hasAnyPermission(event.messageAuthor.asUser().get(), PermissionType.ADMINISTRATOR)) {
-            event.deleteMessage()
-            event.serverTextChannel.ifPresent { textChannel ->
-                textChannel.sendMessage(
-                    EmbedBuilder().setAuthor("Select your Module", null, event.api.yourself.avatar)
-                        .setDescription("Now you can pick up a Module u want to disable. Chose on of the reactions\n\u00AD")
-                        .addInlineField("${convertUnicode(":one:")} | Moderation Module", "With the moderation module you can give your server a better security.\n" +
-                                "Activate the moderation tool if you would like to use the commands. If you want to see the commands of the moderation," + " u can execute" +
-                                " `[prefix]help moderation`")
-                        .addField("${convertUnicode(":two:")} | Ticket Module", "With the ticket module you can create/delete or manage tickets like a pro with this bot." +
-                                " Enable the ticket module if you need the commands. If you want to see the list of commands they are in the ticket module just execute ``[prefix]help ticket``", false)
-                        .addInlineField("${convertUnicode(":three:")} | Welcome System", "The bot can send beautiful pictures to say hello to the new Member. Enable the module if you need them. Execute `[prefix]help welcome` to see the list of the welcome commands")
-                        .setFooter("To get a list of commands that are in the modules use [prefix]help").setTimestampToNow().setColor(Color.decode("0xffa502"))
-                ).thenAccept {
-                    it.addReactions(convertUnicode(":one:"), convertUnicode(":two:"), convertUnicode(":three:"))
-                    createModuleListener(event.api, it.id, event.messageAuthor.asUser().get().id, it.server.get().id)
-                }
-            }
+        textChannel.sendMessage(
+            EmbedBuilder().setAuthor("Select your Module", null, server.api.yourself.avatar)
+                .setDescription("Now you can pick up a module you want to disable. Click on a reactions\n\u00AD")
+                .addInlineField("${convertUnicode(":one:")} | Moderation Module", "With the moderation module you can give your server a better security.\n" +
+                        "Activate the moderation tool if you would like to use the commands. If you want to see the commands of the moderation," + " u can execute" +
+                        " `[prefix]help moderation`")
+                .addField("${convertUnicode(":two:")} | Ticket Module", "With the ticket module you can create/delete or manage tickets like a pro with this bot." +
+                        " Enable the ticket module if you need the commands. If you want to see the list of commands they are in the ticket module just execute ``[prefix]help ticket``", false)
+                .addInlineField("${convertUnicode(":three:")} | Welcome System", "The bot can send beautiful pictures to say hello to the new Member. Enable the module if you need them. Execute `[prefix]help welcome` to see the list of the welcome commands")
+                .setFooter("To get a list of commands that are in the modules use [prefix]help").setTimestampToNow().setColor(Color.decode("0xffa502"))
+        ).thenAccept {
+            it.addReactions(convertUnicode(":one:"), convertUnicode(":two:"), convertUnicode(":three:"))
+            createModuleListener(server.api, it.id, user.id, it.server.get().id)
         }
     }
 
@@ -92,4 +93,11 @@ class ActivateModule : CommandEvent {
             }
         }
     }
+
+    override val permissions: MutableList<PermissionType>
+        get() = mutableListOf(PermissionType.ADMINISTRATOR)
+    override val description: String
+        get() = TODO("Not yet implemented")
+    override val usage: String
+        get() = TODO("Not yet implemented")
 }

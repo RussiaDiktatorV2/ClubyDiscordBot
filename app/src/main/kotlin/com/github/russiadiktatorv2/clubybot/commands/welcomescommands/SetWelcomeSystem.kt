@@ -2,14 +2,18 @@ package com.github.russiadiktatorv2.clubybot.commands.welcomescommands
 
 import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.welcomeMap
+import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
+import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.data.WelcomeSystem
+import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
 import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendMissingArguments
-import com.github.russiadiktatorv2.clubybot.management.interfaces.WelcomeCommand
+import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
+import org.javacord.api.entity.user.User
 import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
 import org.javacord.api.listener.message.reaction.ReactionAddListener
@@ -20,54 +24,51 @@ import java.util.*
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
-class SetWelcomeSystem : WelcomeCommand {
+@LoadCommand
+class SetWelcomeSystem : Command("setWelcome", CommandModule.WELCOME) {
+    private val messagemap = mutableMapOf<Long, ListenerManager<MessageCreateListener>>()
+    private val reactionmap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
-    override fun executeWelcomeCommands(command: String, event: MessageCreateEvent, arguments: List<String>) {
-        if (event.server.get().hasAnyPermission(event.messageAuthor.asUser().get(), PermissionType.MANAGE_SERVER, PermissionType.ADMINISTRATOR)) {
-            event.deleteMessage()
-            if (arguments.size == 2) {
-                if (welcomeMap.containsKey(event.server.get().id).not()) { val welcomeChannelID = arguments[1].toLong()
-                    if (event.server.flatMap { server: Server -> server.getTextChannelById(welcomeChannelID) }.isPresent) {
-                        val welcomeSystem = WelcomeSystem(welcomeChannelID, null)
-                        val setupEmbed = createEmbed {
-                            setAuthor("👋 | Step 2 of the Setup", null, event.api.yourself.avatar)
-                            setDescription("You can chose between two emojis.\n:ok: for a custom welcome message :x: to don't set a welcome message")
-                            setFooter("👋 | The Welcomer System")
-                        }
-                        try {
-                            event.serverTextChannel.ifPresent { channel -> channel.sendMessage(setupEmbed).thenAccept { it.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
-                                createListener(it, 1, event.messageAuthor.asUser().get().id, welcomeSystem)
-                                startTimer(it) }
-                            }
-                        } catch (exception: InterruptedException) {
-                            exception.printStackTrace()
-                        } catch (exception: ExecutionException) {
-                            exception.printStackTrace()
-                        }
-                    }
+    override fun executeCommand(
+        server: Server,
+        user: User,
+        textChannel: ServerTextChannel,
+        message: Message,
+        args: Array<out String>
+    ) {
+        message.delete()
+        if (args.size == 2) {
+            if (welcomeMap.containsKey(server.id).not()) {
+                val welcomeChannelID = args[1].toLong()
 
-                } else {
-                    sendEmbed(event.serverTextChannel.get(), 20, TimeUnit.SECONDS) {
-                        setAuthor("👋 | Problem with the Setup")
-                        setDescription("Your server have already a welcomechannel").setFooter("👋 | Delete or update a welcomechannel").setTimestampToNow()
-                        setColor(Color.decode("0xf2310f"))
-                    }
+                val welcomeSystem = WelcomeSystem(welcomeChannelID, null)
+                val setupEmbed = createEmbed {
+                    setAuthor("👋 | Step 2 of the Setup", null, server.api.yourself.avatar)
+                    setDescription("You can chose between two emojis.\n:ok: for a custom welcome message :x: to don't set a welcome message")
+                    setFooter("👋 | The Welcomer System")
                 }
+                try {
+                    textChannel.sendMessage(setupEmbed).thenAccept { it.addReactions(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
+                        createListener(it, 1, user.id, welcomeSystem)
+                        startTimer(it) }
+                } catch (exception: InterruptedException) {
+                    exception.printStackTrace()
+                } catch (exception: ExecutionException) {
+                    exception.printStackTrace()
+                }
+
             } else {
-                event.serverTextChannel.ifPresent { channel -> channel.sendMissingArguments("setwelcome textchanelid", "Welcome", event.server.get()) }
+                sendEmbed(textChannel, 20, TimeUnit.SECONDS) {
+                    setAuthor("👋 | Problem with the Setup")
+                    setDescription("Your server have already a welcomechannel").setFooter("👋 | Delete or update a welcomechannel").setTimestampToNow()
+                    setColor(Color.decode("0xf2310f"))
+                }
             }
         } else {
-            sendEmbed(event.serverTextChannel.get(), 13, TimeUnit.SECONDS) {
-                setAuthor("${ClubyDiscordBot.convertUnicode("\uD83D\uDC4B")} | Problem with the Setup")
-                setDescription("You don't have the required permissions `${PermissionType.MANAGE_SERVER}` to execute the following command").setFooter("👋 | Welcomer System")
-                setColor(Color.decode("0x32ff7e"))
-            }
+             textChannel.sendMissingArguments("setwelcome textchanelid", "Welcome", server)
         }
+
     }
-
-    private val messagemap = mutableMapOf<Long, ListenerManager<MessageCreateListener>>()
-
-    private val reactionmap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
     private fun createListener(message: Message, state: Int, memberID: Long, welcomeChannel: WelcomeSystem) {
         when (state) {
@@ -264,7 +265,6 @@ class SetWelcomeSystem : WelcomeCommand {
 
 
     private fun delete(messageid: Long, state: Int) {
-
         when (state) {
 
             1 -> {
@@ -307,8 +307,14 @@ class SetWelcomeSystem : WelcomeCommand {
     }
 
     private fun stopTimer(messageid: Long) {
-
         timerMap[messageid]?.cancel()
         timerMap.remove(messageid)
     }
+
+    override val permissions: MutableList<PermissionType>
+        get() = mutableListOf(PermissionType.MANAGE_SERVER, PermissionType.ADMINISTRATOR)
+    override val description: String
+        get() = TODO("Not yet implemented")
+    override val usage: String
+        get() = TODO("Not yet implemented")
 }
