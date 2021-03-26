@@ -3,7 +3,7 @@ package com.github.russiadiktatorv2.clubybot.management.commands
 import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
 import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.sendEmbed
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.server.Server
@@ -16,14 +16,13 @@ object CommandManager {
     val commands = mutableMapOf<String, Command>()
 
     fun loadCommands() {
-        val reflections: Reflections = Reflections("com.github.russiadiktatorv2.clubybot.commands")
+        val reflections = Reflections("com.github.russiadiktatorv2.clubybot.commands")
 
         for (clazz in reflections.getTypesAnnotatedWith(LoadCommand::class.java, true)) {
             val obj = clazz.getDeclaredConstructor().newInstance()
 
             if (obj is Command)
                 registerCommand(obj)
-
         }
     }
 
@@ -39,7 +38,7 @@ object CommandManager {
         val command: Command? = commands[commandName]
         val module: CommandModule? = command?.module
 
-        var hasPermission: Boolean = false
+        var hasPermission = false
 
         for (permission in server.getHighestRole(user).get().allowedPermissions) {
             if (server.hasPermission(user, permission))
@@ -49,7 +48,7 @@ object CommandManager {
         if (hasPermission) {
             when (module) {
                 CommandModule.MODERATION -> {
-                    if (CacheManager.moderationModule.contains(server.id))
+                    if (CacheManager.moderationModule.contains(server.id).not())
                         command.executeCommand(server, user, textChannel, message, args)
                     else
                         sendEmbed(textChannel, 15, TimeUnit.SECONDS) {
@@ -60,7 +59,7 @@ object CommandManager {
                 }
 
                 CommandModule.TICKET -> {
-                    if (CacheManager.ticketModule.contains(server.id))
+                    if (CacheManager.ticketModule.contains(server.id).not())
                         command.executeCommand(server, user, textChannel, message, args)
                     else
                         sendEmbed(textChannel, 15, TimeUnit.SECONDS) {
@@ -71,7 +70,7 @@ object CommandManager {
                 }
 
                 CommandModule.WELCOME -> {
-                    if (CacheManager.welcomeModule.contains(server.id))
+                    if (CacheManager.welcomeModule.contains(server.id).not())
                         command.executeCommand(server, user, textChannel, message, args)
                     else
                         sendEmbed(textChannel, 15, TimeUnit.SECONDS) {
@@ -93,30 +92,4 @@ object CommandManager {
             commands[alias] = command
         }
     }
-
-    /*init {
-        //Normal Commands
-        normalCommands["help"] = HelpICommand()
-
-        normalCommands["addmodule"] = ActivateModule()
-        normalCommands["removemodule"] = DisableModule()
-
-        normalCommands["prefix"] = SetPrefixICommand()
-        normalCommands["getid"] = IdICommand()
-
-        normalCommands["dummy"] = DummyICommand()
-        normalCommands["contributor"] = ContributorICommand()
-        normalCommands["restart"] = RestartICommand()
-
-        //Moderation Commands
-
-        //Ticket Commands
-        ticketCommands["setticket"] = SetTicketSystem()
-
-        ticketCommands["createticket"] = CreateTicket()
-
-        //Welcome Commands
-        welcomeCommands["setwelcome"] = SetWelcomeSystem()
-        welcomeCommands["removewelcome"] = RemoveWelcomeSystem()
-    }*/
 }

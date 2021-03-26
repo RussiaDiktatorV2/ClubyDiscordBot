@@ -4,8 +4,8 @@ import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.wel
 import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
 import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendMissingArguments
+import com.github.russiadiktatorv2.clubybot.extensions.sendEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.sendMissingArguments
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType

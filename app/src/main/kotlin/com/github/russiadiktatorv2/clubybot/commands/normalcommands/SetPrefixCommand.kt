@@ -4,16 +4,14 @@ import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.pre
 import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
 import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendPrefixIsSame
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendPrefixWasChanged
-import com.github.russiadiktatorv2.clubybot.management.commands.interfaces.ICommand
+import com.github.russiadiktatorv2.clubybot.extensions.sendEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.sendPrefixIsSame
+import com.github.russiadiktatorv2.clubybot.extensions.sendPrefixWasChanged
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
 import org.javacord.api.entity.user.User
-import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
@@ -21,8 +19,8 @@ import java.util.concurrent.TimeUnit
 class SetPrefixCommand : Command("prefix", CommandModule.DEFAULT) {
     override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         message.delete()
-        if (args.size == 2) {
-            var newPrefix = args[1]
+        if (args.size == 1) {
+            var newPrefix = args[0]
             newPrefix = newPrefix.replace("\n", "")
             prefixSetup(newPrefix, server.id, textChannel)
 

@@ -3,10 +3,10 @@ package com.github.russiadiktatorv2.clubybot.commands.normalcommands.module
 import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot.convertUnicode
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager
 import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
+import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendModuleIsAlreadyDisabled
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendModuleWasDisabledMessage
-import com.github.russiadiktatorv2.clubybot.management.commands.interfaces.ICommand
+import com.github.russiadiktatorv2.clubybot.extensions.sendModuleIsAlreadyDisabled
+import com.github.russiadiktatorv2.clubybot.extensions.sendModuleWasDisabledMessage
 import org.javacord.api.DiscordApi
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
@@ -18,7 +18,8 @@ import org.javacord.api.event.message.MessageCreateEvent
 import java.awt.Color
 import java.util.concurrent.TimeUnit
 
-class DisableModule : Command("disableModule", CommandModule.DEFAULT) {
+@LoadCommand
+class DisableModule : Command("removemodule", CommandModule.DEFAULT) {
     override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         message.delete()
 

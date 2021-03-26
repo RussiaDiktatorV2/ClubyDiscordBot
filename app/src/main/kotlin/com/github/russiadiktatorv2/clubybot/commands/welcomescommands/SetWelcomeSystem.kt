@@ -6,15 +6,14 @@ import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Comman
 import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.data.WelcomeSystem
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendMissingArguments
+import com.github.russiadiktatorv2.clubybot.extensions.createEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.sendEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.sendMissingArguments
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
 import org.javacord.api.entity.user.User
-import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
 import org.javacord.api.listener.message.reaction.ReactionAddListener
 import org.javacord.api.util.event.ListenerManager
@@ -25,7 +24,7 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
 @LoadCommand
-class SetWelcomeSystem : Command("setWelcome", CommandModule.WELCOME) {
+class SetWelcomeSystem : Command("setwelcome", CommandModule.WELCOME) {
     private val messagemap = mutableMapOf<Long, ListenerManager<MessageCreateListener>>()
     private val reactionmap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
@@ -37,9 +36,9 @@ class SetWelcomeSystem : Command("setWelcome", CommandModule.WELCOME) {
         args: Array<out String>
     ) {
         message.delete()
-        if (args.size == 2) {
+        if (args.size == 1) {
             if (welcomeMap.containsKey(server.id).not()) {
-                val welcomeChannelID = args[1].toLong()
+                val welcomeChannelID = args[0].toLong()
 
                 val welcomeSystem = WelcomeSystem(welcomeChannelID, null)
                 val setupEmbed = createEmbed {

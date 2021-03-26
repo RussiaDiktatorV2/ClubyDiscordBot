@@ -20,7 +20,7 @@ class HelpCommand : Command("help", CommandModule.DEFAULT) {
 
     override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         message.delete()
-        val prefix = prefixMap.getOrDefault(server.id, "")
+        val prefix = prefixMap.getOrDefault(server.id, "!")
 
         textChannel.sendMessage(
             EmbedBuilder()

@@ -15,6 +15,7 @@ import java.util.*
 
 @LoadCommand
 class DummyCommand : Command("dummy", CommandModule.DEFAULT) {
+
     override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         val commandSize = CommandManager.commands.size
         MessageBuilder().append("Hey there are some informations about me").appendNewLine().appendNewLine()

@@ -1,4 +1,4 @@
-package com.github.russiadiktatorv2.clubybot.management.commands.handling
+package com.github.russiadiktatorv2.clubybot.extensions
 
 import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot
 import com.github.russiadiktatorv2.clubybot.core.ClubyDiscordBot.convertUnicode

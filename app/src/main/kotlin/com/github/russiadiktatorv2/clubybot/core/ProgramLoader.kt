@@ -21,13 +21,13 @@ import java.util.concurrent.TimeUnit
 
 object ClubyDiscordBot {
 
-    val mongoClient = KMongo.createClient("mongodb://localhost")
+    val mongoClient = KMongo.createClient("")
 
     init {
         loadClubyCache()
 
         val discordApi = DiscordApiBuilder().setToken(ClubySettings.BOT_TOKEN)
-            .setAllIntentsExcept(Intent.GUILD_WEBHOOKS, Intent.GUILD_PRESENCES, Intent.GUILD_INVITES, Intent.GUILD_INTEGRATIONS, Intent.GUILD_EMOJIS, Intent.GUILD_BANS, Intent.DIRECT_MESSAGE_TYPING, Intent.GUILD_MESSAGE_TYPING, Intent.GUILD_MEMBERS)
+            .setAllIntentsExcept(Intent.GUILD_WEBHOOKS, Intent.GUILD_PRESENCES, Intent.GUILD_INVITES, Intent.GUILD_INTEGRATIONS, Intent.GUILD_EMOJIS, Intent.GUILD_BANS, Intent.DIRECT_MESSAGE_TYPING, Intent.GUILD_MESSAGE_TYPING)
             .addServerMemberJoinListener(GuildMemberJoinEvent())
             .login().join()
         discordApi.setMessageCacheSize(0, 0)

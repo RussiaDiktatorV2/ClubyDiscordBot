@@ -6,14 +6,13 @@ import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Comman
 import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.data.TicketSystem
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.createEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.sendEmbed
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
 import org.javacord.api.entity.user.User
-import org.javacord.api.event.message.MessageCreateEvent
 import org.javacord.api.listener.message.MessageCreateListener
 import org.javacord.api.listener.message.reaction.ReactionAddListener
 import org.javacord.api.util.event.ListenerManager
@@ -23,7 +22,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @LoadCommand
-class SetTicketSystem : Command("setTicket", CommandModule.TICKET, "ticket") {
+class SetTicketSystem : Command("setticket", CommandModule.TICKET, "ticket") {
     private val messageMap = mutableMapOf<Long, ListenerManager<MessageCreateListener>>()
     private val reactionMap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
@@ -35,8 +34,8 @@ class SetTicketSystem : Command("setTicket", CommandModule.TICKET, "ticket") {
         args: Array<out String>
     ) {
         message.delete()
-        if (args.size == 2) {
-            val ticketChannelID: Long = args[1].toLong()
+        if (args.size == 1) {
+            val ticketChannelID: Long = args[0].toLong()
 
             if (!ticketMap.containsKey(ticketChannelID)) {
                 val ticketSystem = TicketSystem("%name%", null, null)

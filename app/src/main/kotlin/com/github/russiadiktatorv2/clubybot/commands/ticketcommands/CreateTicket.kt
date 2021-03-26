@@ -6,7 +6,7 @@ import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Comman
 import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.data.TicketSystem
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.createEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.createEmbed
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
@@ -20,14 +20,9 @@ import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
 @LoadCommand
-class CreateTicket : Command("createTicket", CommandModule.TICKET) {
-    override fun executeCommand(
-        server: Server,
-        user: User,
-        textChannel: ServerTextChannel,
-        message: Message,
-        args: Array<out String>
-    ) {
+class CreateTicket : Command("createticket", CommandModule.TICKET) {
+
+    override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         if (!user.isBot) {
             if (!CacheManager.ticketsMap.containsKey(user.id)) {
                 val ticketChannel: TicketSystem? = CacheManager.ticketMap[textChannel.id]
@@ -64,7 +59,7 @@ class CreateTicket : Command("createTicket", CommandModule.TICKET) {
                         }).thenAccept {
                             ticketListener(it, 1)
                             it.addReactions(
-                                ClubyDiscordBot.convertUnicode("Warning:820606568370012170"),
+                                ClubyDiscordBot.convertUnicode(":x:"),
                                 ClubyDiscordBot.convertUnicode("\uD83D\uDD12")
                             )
                         }
@@ -78,49 +73,31 @@ class CreateTicket : Command("createTicket", CommandModule.TICKET) {
     private fun ticketListener(message: Message, reactionState: Int) {
         message.addReactionAddListener { event ->
             if (event.server.isPresent && event.user.isPresent) {
-                if (event.user.isPresent && event.message.isPresent && event.reaction.isPresent && event.reaction.get().emoji.asUnicodeEmoji().isPresent) {
+                if (event.user.isPresent && event.message.isPresent && event.reaction.isPresent && event.reaction.get().emoji.isUnicodeEmoji) {
                     if (!(event.user.get().isBot) && event.message.get().id == message.id) {
                         when (reactionState) {
 
                             1 -> {
-                                when (event.reaction.get().emoji.asUnicodeEmoji().get()) {
-
-                                    ClubyDiscordBot.convertUnicode("Warning:820606568370012170") -> {
-                                        message.edit(createEmbed {
-                                            setTitle("🎟 Ticket ${message.serverTextChannel.get().name}")
-                                            setDescription(
-                                                "Status: **Saved**\n" +
-                                                        "Created at: **${
-                                                            LocalDateTime.now()
-                                                                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-                                                        }**\n\n" +
-                                                        "React to the ✅ emoji to unlock the ticket. React to the ❗ emoji to close the ticket"
-                                            )
-                                            setColor(Color.decode("0x32ff7e"))
-                                        })
-                                    }
-
-                                    ClubyDiscordBot.convertUnicode("\uD83D\uDD12") -> {
-                                        message.edit(createEmbed {
-                                            setAuthor("Of Course")
-                                        }).thenRun {
-                                            message.api.threadPool.scheduler.schedule(
-                                                { message.serverTextChannel.ifPresent { channel -> channel.delete() } },
-                                                10,
-                                                TimeUnit.SECONDS
-                                            )
-                                            ticketListener(message, 2)
-                                        }
+                                if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":lock:"))) {
+                                    message.edit(createEmbed {
+                                        setAuthor("Of Course")
+                                    }).thenRun {
+                                        message.api.threadPool.scheduler.schedule({ message.serverTextChannel.ifPresent { channel -> channel.delete() } }, 10, TimeUnit.SECONDS)
+                                        ticketListener(message, 2)
                                     }
                                 }
-                            }
 
-                            2 -> {
-                                if (event.reaction.get().emoji.asUnicodeEmoji().get() == ClubyDiscordBot.convertUnicode(
-                                        ":x:"
-                                    )
-                                ) {
-
+                                if (event.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":x:"))) {
+                                    message.edit(createEmbed {
+                                        setTitle("🎟 Ticket ${message.serverTextChannel.get().name}")
+                                        setDescription(
+                                            "Status: **Saved**\n" +
+                                                    "Created at: **${LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))}**\n\n" +
+                                                    "React to the ✅ emoji to unlock the ticket. React to the :x: emoji to close the ticket"
+                                        )
+                                        setThumbnail(event.user.map { user -> user.avatar }.get())
+                                        setColor(Color.decode("0x32ff7e"))
+                                    })
                                 }
                             }
                         }
@@ -131,7 +108,7 @@ class CreateTicket : Command("createTicket", CommandModule.TICKET) {
     }
 
     override val permissions: MutableList<PermissionType>
-        get() = mutableListOf(PermissionType.ADMINISTRATOR)
+        get() = mutableListOf()
     override val description: String
         get() = TODO("Not yet implemented")
     override val usage: String

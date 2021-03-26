@@ -1,20 +1,18 @@
 package com.github.russiadiktatorv2.clubybot.commands.devcommands
 
 import com.github.russiadiktatorv2.clubybot.extensions.deleteAfter
-import com.github.russiadiktatorv2.clubybot.management.commands.handling.sendEmbed
+import com.github.russiadiktatorv2.clubybot.extensions.sendEmbed
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager
 import com.github.russiadiktatorv2.clubybot.management.commands.abstracts.Command
 import com.github.russiadiktatorv2.clubybot.management.commands.annotations.LoadCommand
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
 
-import com.github.russiadiktatorv2.clubybot.management.commands.interfaces.ICommand
 import org.javacord.api.entity.channel.ServerTextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
 import org.javacord.api.entity.user.User
 
-import org.javacord.api.event.message.MessageCreateEvent
 import java.util.concurrent.TimeUnit
 
 import java.awt.Color
@@ -27,11 +25,11 @@ class ContributorCommand : Command("contributer", CommandModule.DEFAULT) {
         message.delete()
 
         if (user.id == server.api.ownerId) {
-            if (args.size == 3) {
-                when (args[1]) {
+            if (args.size == 2) {
+                when (args[0]) {
                     "add" -> {
                         try {
-                            val id = args[2].toLong()
+                            val id = args[1].toLong()
                             if (server.id == serverID) {
                                 if (server.getMemberById(id).isPresent) {
                                     if (! CacheManager.devList.contains(id)) {
@@ -50,7 +48,7 @@ class ContributorCommand : Command("contributer", CommandModule.DEFAULT) {
                     }
                     "remove" -> {
                         try {
-                            val id = args[2].toLong()
+                            val id = args[1].toLong()
                             if (server.id == 795462575503573013) {
                                 if (server.getMemberById(id).isPresent) {
                                     if (CacheManager.devList.contains(id)) {
@@ -68,11 +66,10 @@ class ContributorCommand : Command("contributer", CommandModule.DEFAULT) {
                         }
                     }
                 }
-            } else if (args.size == 1) {
+            } else if (args.isEmpty()) {
                 if (CacheManager.devList.size > 0) {
                     val stringBuilder: StringBuilder = StringBuilder("~~----------~~ \n\n")
                     CacheManager.devList.forEach { contributor -> stringBuilder.append("${server.getHighestRole(server.getMemberById(contributor).get()).get().mentionTag} ↣ ${server.api.getUserById(contributor).get().name} \n") }
-                    // Kommentier' hier mal in der Pull Request mit dem kleinen "+" links neben der Zeile, damit ich weiß, dass du dir das auch angeschaut hast :)
                     sendEmbed(textChannel,15, TimeUnit.DAYS) {
                         addInlineField("Contributor-List:", stringBuilder.toString())
                         setColor(Color.decode("0x32ff7e"))
