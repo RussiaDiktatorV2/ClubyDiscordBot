@@ -3,68 +3,74 @@
  */
 package com.github.russiadiktatorv2.clubybot.core
 
-import com.github.russiadiktatorv2.clubybot.events.GuildMemberJoinEvent
+import com.github.russiadiktatorv2.clubybot.commands.ticketcommands.CreateTicket
+import com.github.russiadiktatorv2.clubybot.events.commandevent.GuildMemberJoinEvent
 import com.github.russiadiktatorv2.clubybot.events.MessageListener
+import com.github.russiadiktatorv2.clubybot.events.commandevent.TicketChannelDeleteListener
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.loadClubyCache
-import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.prefixMap
+import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager.tickets
 import com.github.russiadiktatorv2.clubybot.management.commands.CommandManager
-import com.github.russiadiktatorv2.clubybot.management.database.MongoDB
-import com.github.russiadiktatorv2.clubybot.settings.ClubySettings
+import com.github.russiadiktatorv2.clubybot.management.database.PostgreSQL
 import com.vdurmont.emoji.EmojiParser
 import org.javacord.api.DiscordApi
 import org.javacord.api.DiscordApiBuilder
 import org.javacord.api.entity.activity.ActivityType
 import org.javacord.api.entity.intent.Intent
 import org.javacord.api.entity.user.UserStatus
-import org.litote.kmongo.KMongo
+import java.sql.DriverManager
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 object ClubyDiscordBot {
 
-    val mongoClient = KMongo.createClient("")
-
     init {
-        loadClubyCache()
+        PostgreSQL.databaseConnect()
 
-        val discordApi = DiscordApiBuilder().setToken(ClubySettings.BOT_TOKEN)
+        val discordApi = DiscordApiBuilder().setToken(System.getenv("clubytoken")).setWaitForServersOnStartup(true).setWaitForUsersOnStartup(true)
             .setAllIntentsExcept(Intent.GUILD_WEBHOOKS, Intent.GUILD_PRESENCES, Intent.GUILD_INVITES, Intent.GUILD_INTEGRATIONS, Intent.GUILD_EMOJIS, Intent.GUILD_BANS, Intent.DIRECT_MESSAGE_TYPING, Intent.GUILD_MESSAGE_TYPING)
             .addServerMemberJoinListener(GuildMemberJoinEvent())
+            .addServerChannelDeleteListener(TicketChannelDeleteListener())
+            .addReactionAddListener(CreateTicket())
             .login().join()
         discordApi.setMessageCacheSize(0, 0)
         discordApi.setReconnectDelay { reconnectDelay -> reconnectDelay * 2 }
-        //discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( { autoCache()} , 0, 12, TimeUnit.HOURS)
-        discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( {changeActivity(discordApi)}, 0, 2, TimeUnit.MINUTES)
-        println("Bot started")
+        discordApi.threadPool.daemonScheduler.scheduleAtFixedRate( {changeActivity(discordApi)}, 0, 3, TimeUnit.MINUTES)
         stopProgram(discordApi)
 
-        CommandManager.loadCommands()
         discordApi.addMessageCreateListener(MessageListener())
+        CommandManager.loadCommands()
+        println("Cluby is starting up...")
     }
 
     private fun stopProgram(discordApi: DiscordApi) {
         return Thread {
 
-            if (readLine().equals("stop")) {
+            if (readLine() == "stop") {
+                deleteChannels(discordApi)
+                println("Every ticket channel was deleted")
+
                 discordApi.updateStatus(UserStatus.OFFLINE)
                 discordApi.disconnect()
 
-                MongoDB.addDocuments()
-                mongoClient.close()
+                PostgreSQL.disconnectDatabase()
+                exitProcess(0)
             }
         }.start()
     }
 
+    private fun deleteChannels(discordApi: DiscordApi) {
+        tickets.forEach { ticketChannels -> discordApi.getServerTextChannelById(ticketChannels).ifPresent { channels -> channels.delete() } }
+    }
+
     private fun changeActivity(discordApi: DiscordApi) {
-        val statusList = arrayOf("${convertUnicode("\uD83D\uDD75\u200D♂")}️| with ${discordApi.servers.size} guilds",
-            "${convertUnicode("\uD83D\uDD75\u200D♀")} | Prefix !(Custom)", "${convertUnicode("\uD83E\uDD16")} | Version 0.15", "📡 | (East-Europe)").random()
+        val statusList = arrayListOf("🕵️‍♀️| with ${discordApi.servers.size} guilds", "❗ Announcement • TicketSystem").random()
         discordApi.updateActivity(ActivityType.WATCHING, statusList)
     }
 
-    fun convertUnicode(unicodeID: String) : String {
-        return EmojiParser.parseToUnicode(unicodeID)
-    }
+    fun convertUnicode(unicodeID: String) : String { return EmojiParser.parseToUnicode(unicodeID) }
 }
 
 fun main() {
     ClubyDiscordBot
+    loadClubyCache()
 }

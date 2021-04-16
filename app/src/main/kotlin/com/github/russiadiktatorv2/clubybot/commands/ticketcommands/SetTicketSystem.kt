@@ -8,7 +8,9 @@ import com.github.russiadiktatorv2.clubybot.management.commands.data.TicketSyste
 import com.github.russiadiktatorv2.clubybot.management.commands.enums.CommandModule
 import com.github.russiadiktatorv2.clubybot.extensions.createEmbed
 import com.github.russiadiktatorv2.clubybot.extensions.sendEmbed
+import org.javacord.api.entity.channel.Channel
 import org.javacord.api.entity.channel.ServerTextChannel
+import org.javacord.api.entity.channel.TextChannel
 import org.javacord.api.entity.message.Message
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
@@ -26,41 +28,39 @@ class SetTicketSystem : Command("setticket", CommandModule.TICKET, "ticket") {
     private val messageMap = mutableMapOf<Long, ListenerManager<MessageCreateListener>>()
     private val reactionMap = mutableMapOf<Long, ListenerManager<ReactionAddListener>>()
 
-    override fun executeCommand(
-        server: Server,
-        user: User,
-        textChannel: ServerTextChannel,
-        message: Message,
-        args: Array<out String>
-    ) {
+    override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         message.delete()
         if (args.size == 1) {
-            val ticketChannelID: Long = args[0].toLong()
+            try {
+                val ticketChannelID: Long = args[0].toLong()
 
-            if (!ticketMap.containsKey(ticketChannelID)) {
-                val ticketSystem = TicketSystem("%name%", null, null)
+                if (server.getTextChannelById(ticketChannelID).isPresent) {
+                    if (!ticketMap.containsKey(ticketChannelID)) {
+                        val ticketSystem = TicketSystem("%name%", 0, null, null)
 
-                val ticketSetupEmbed = createEmbed {
-                    setAuthor("🎟 | Step 2 of the Setup", null, server.api.yourself.avatar)
-                    setDescription("You can chose between two emojis.\n:ok: for a custom channel name or :x: to set the username as channel name")
-                    setFooter("👋 | The Ticket System")
-                }
+                        val ticketSetupEmbed = createEmbed {
+                            setAuthor("🎟 | Step 2 of the Setup", null, server.api.yourself.avatar)
+                            setDescription("You can chose between two emojis.\n:ok: for a custom channel name or :x: to set the username as channel name")
+                            setFooter("👋 | The Ticket System")
+                        }
 
-                textChannel.sendMessage(ticketSetupEmbed).thenAccept {
-                    it.addReactions(ClubyDiscordBot.convertUnicode(":ok:"), ClubyDiscordBot.convertUnicode(":x:"))
-                    createTicketListener(it, 1, user.id, ticketChannelID,  ticketSystem)
-                    startTimer(it)
+                        textChannel.sendMessage(ticketSetupEmbed).thenAccept {
+                            it.addReactions(ClubyDiscordBot.convertUnicode(":ok:"), ClubyDiscordBot.convertUnicode(":x:"))
+                            createTicketListener(it, 1, user.id, ticketChannelID,  ticketSystem)
+                            startTimer(it)
+                        }
+                    } else {
+                        sendEmbed(textChannel, 20, TimeUnit.SECONDS) {
+                            setAuthor("🎟 | Problem with the Setup")
+                            setDescription("The channel ``${server.getTextChannelById(ticketChannelID).get().name}`` is already a ticket channel").setFooter("🎟 | Delete or update a ticketchannel").setTimestampToNow()
+                            setColor(Color.decode("0xf2310f"))
+                        }
+                    }
                 }
-            } else {
-                sendEmbed(textChannel, 20, TimeUnit.SECONDS) {
-                    setAuthor("🎟 | Problem with the Setup")
-                    setDescription("The channel ``${server.getTextChannelById(ticketChannelID).get().name}`` is already a ticket channel").setFooter("🎟 | Delete or update a ticketchannel").setTimestampToNow()
-                    setColor(Color.decode("0xf2310f"))
-                }
+            } catch (e: NumberFormatException) {
+                //Nothing
             }
-
         }
-
     }
 
     private fun createTicketListener(message: Message, state: Int, memberID: Long, channelID: Long, ticketChannel: TicketSystem) {
@@ -149,51 +149,65 @@ class SetTicketSystem : Command("setticket", CommandModule.TICKET, "ticket") {
             }
 
             4 -> {
-                val listenerManager: ListenerManager<MessageCreateListener> = message.channel.addMessageCreateListener { event ->
-                    if (event.server.isPresent && event.messageAuthor.asUser().isPresent) {
-                        if (event.message.mentionedRoles.isNotEmpty()) {
-                            val mentions = event.message.mentionedRoles.map { roles -> roles.id }
-                            val stringBuilder = StringBuilder()
-                            event.message.mentionedRoles.map { roles -> roles.mentionTag }.forEach { message -> stringBuilder.append("\n$message") }
-                            event.deleteMessage()
-                            ticketChannel.roleIDs = mentions
-                            ticketMap[channelID] = ticketChannel
-                            message.edit(createEmbed {
-                                setAuthor("🎟 | Ticket System")
-                                setDescription("The setup for the channel `${event.server.get().getTextChannelById(channelID).get().name}` was finished by **${event.server.get().getMemberById(memberID).get().name}**")
-                                addInlineField("⚙️ | Ticket Settings", "Channel Name » ${ticketChannel.channelName}\n\n" +
-                                            "Ticket Message » ${ticketChannel.ticketMessage}\n\n" +
-                                            "Roles ¬ $stringBuilder") }).exceptionally(ExceptionLogger.get()).whenComplete { _, _ ->
-                                message.removeReactionsByEmoji(ClubyDiscordBot.convertUnicode("\uD83C\uDD97"), ClubyDiscordBot.convertUnicode("\u274C"))
-                                message.addReaction(ClubyDiscordBot.convertUnicode(":exclamation:"))
-                                stopTimer(message.id)
-                                event.api.threadPool.scheduler.schedule({ message.delete() }, 40, TimeUnit.SECONDS)
-                                delete(message.id, 1)
+                val finalListener: ListenerManager<MessageCreateListener> = message.channel.addMessageCreateListener { event ->
+                    val roleMentions = event.message.mentionedRoles.map { ticketRoles -> ticketRoles.id }
+                    val messageBuilder = StringBuilder(); event.message.mentionedRoles.map { roles -> roles.mentionTag }.forEach { message -> messageBuilder.append("\n$message") }
 
-                                message.addReactionAddListener { listener ->
-                                    if (listener.server.isPresent && listener.reaction.isPresent) {
-                                        listener.user.ifPresent { user ->
-                                            if (user.id == memberID) {
-                                                if (listener.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))) {
-                                                    ticketMap.remove(channelID, ticketChannel)
-                                                    message.edit(createEmbed {
-                                                        setAuthor("🎟 | Ticket Setup")
-                                                        setDescription("You deleted the ticket channel ``${event.server.get().getTextChannelById(channelID).get().name}`` from you server"
-                                                        ).setFooter("🎟 | The Ticket System").setTimestampToNow()
-                                                        setColor(Color.decode("0x32ff7e"))
-                                                    }).exceptionally(ExceptionLogger.get()).whenComplete { _, _ ->
-                                                        message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
-                                                    }
-                                                }
+                    ticketChannel.roleIDs = roleMentions
+
+                    event.deleteMessage()
+                    message.edit(
+                        createEmbed {
+                            setAuthor("🎟 | Ticket System")
+                            setDescription("The setup for the channel `${event.server.get().getTextChannelById(channelID).get().name}` was finished by **${event.server.get().getMemberById(memberID).get().name}**")
+                            addInlineField("⚙️ | Ticket Settings", "Channel Name » ${ticketChannel.channelName}\n\n" +
+                                    "Ticket Message » ${ticketChannel.ticketMessage}\n\n" +
+                                    "Roles ¬ $messageBuilder")
+                        }
+                    ).whenComplete { _, _ ->
+                        message.removeReactionsByEmoji("\uD83C\uDD97", "\u274C")
+                        message.addReaction(ClubyDiscordBot.convertUnicode(":exclamation:"))
+
+                        event.server.flatMap { server -> server.getTextChannelById(channelID) }.ifPresent { channel ->
+                            channel.sendMessage(
+                                createEmbed {
+                                    setTitle("Support")
+                                    setDescription("React to this message with :incoming_envelope: to create a ticket!")
+                                    setFooter("🎫 Ticket System | Your ticket module", event.api.yourself.avatar)
+                                }
+                            ).thenAccept { ticketMessage ->
+                                ticketMessage.addReaction(ClubyDiscordBot.convertUnicode(":incoming_envelope:"))
+
+                                ticketChannel.reactionMessageId = ticketMessage.id
+                                ticketMap[channelID] = ticketChannel
+                            }
+                        }
+
+                        message.addReactionAddListener { deleteListener ->
+                            deleteListener.server.ifPresent { server -> deleteListener.user.ifPresent { ticketUser ->
+                                if (memberID == ticketUser.id && deleteListener.reaction.isPresent) {
+                                    if (deleteListener.reaction.get().emoji.equalsEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))) {
+                                        ticketMap.remove(channelID, ticketChannel)
+
+                                        message.edit(
+                                            createEmbed {
+                                                setAuthor("🎟 | Ticket Setup")
+                                                setDescription("You deleted the ticket channel ``${event.server.get().getTextChannelById(channelID).get().name}`` from you server"
+                                                ).setFooter("🎟 | The Ticket System").setTimestampToNow()
+                                                setColor(Color.decode("0x32ff7e"))
                                             }
+                                        ).thenAccept {
+                                            it.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
                                         }
                                     }
-                                }.removeAfter(20, TimeUnit.SECONDS)
-                                    .addRemoveHandler { message.removeOwnReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:")) } }
+                                }
+                            }}
+                        }.removeAfter(20, TimeUnit.SECONDS).addRemoveHandler {
+                            message.removeReactionByEmoji(ClubyDiscordBot.convertUnicode(":exclamation:"))
                         }
                     }
                 }
-                messageMap[message.id] = listenerManager
+                messageMap[message.id] = finalListener
             }
         }
     }

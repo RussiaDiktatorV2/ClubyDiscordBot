@@ -18,13 +18,14 @@ import java.util.concurrent.TimeUnit
 import java.awt.Color
 
 @LoadCommand
-class ContributorCommand : Command("contributer", CommandModule.DEFAULT) {
-    val serverID = 795462575503573013
+class ContributorCommand : Command("contributor", CommandModule.DEFAULT) {
+
+    private val serverID = 795462575503573013
 
     override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         message.delete()
 
-        if (user.id == server.api.ownerId) {
+        if (user.id == server.api.getServerById(serverID).map { clubyServer -> clubyServer.ownerId }.get()) {
             if (args.size == 2) {
                 when (args[0]) {
                     "add" -> {

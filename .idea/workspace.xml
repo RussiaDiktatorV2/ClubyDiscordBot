@@ -5,27 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4d8fa231-c420-4a23-9bc6-a02be22d0afd" name="Default Changelist" comment="Changed a performance bug in the SetWelcomeSystem.kt Class">
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/ticketcommands/CreateTicket.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/MongoDB.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/NewsCommand.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/ticketcommands/DeleteTicket.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/ticketcommands/RemoveTicketSystem.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/ServerJoinEvent.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/commandevent/TicketChannelDeleteListener.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/PostgreSQL.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/resources/logback.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/DummyCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/DummyCommand.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/devcommands/ContributorCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/devcommands/ContributorCommand.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/devcommands/RestartCommand.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/HelpCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/HelpCommand.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/IdCommand.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/RestartCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/devcommands/RestartCommand.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/SetPrefixCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/SetPrefixCommand.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/normalcommands/module/ActivateModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/ticketcommands/CreateTicket.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/ticketcommands/CreateTicket.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/ticketcommands/SetTicketSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/ticketcommands/SetTicketSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/commands/welcomescommands/SetWelcomeSystem.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/core/ProgramLoader.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/core/ProgramLoader.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/GuildMemberJoinEvent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/events/commandevent/GuildMemberJoinEvent.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CacheManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CacheManager.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CommandManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/CommandManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/abstracts/Command.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/abstracts/Command.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/annotations/LoadCommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/annotations/LoadCommand.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/data/TicketSystem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/data/TicketSystem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/MariaDB.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/TableManager.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/interfaces/ICommand.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/commands/interfaces/ICommand.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/management/database/MongoDB.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/kotlin/com/github/russiadiktatorv2/clubybot/settings/ClubySettings.kt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +62,17 @@
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Cluby" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Cluby" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Cluby" type="f1a62948:ProjectNode" />
                 <item name="Run Configurations" type="7b0102dc:RunConfigurationsNode" />
               </path>
             </expand>
@@ -70,11 +87,11 @@
       <list>
         <option value="Kotlin Annotation" />
         <option value="Kotlin Data Class" />
-        <option value="Class" />
         <option value="Kotlin Interface" />
         <option value="Kotlin File" />
-        <option value="Kotlin Object" />
         <option value="Kotlin Class" />
+        <option value="Class" />
+        <option value="Kotlin Object" />
       </list>
     </option>
   </component>
@@ -118,23 +135,22 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/settings.gradle.kts" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="proofread" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.github.russiadiktatorv2.clubybot.events.commandevent" />
       <recent name="com.github.russiadiktatorv2.clubybot.commands.devcommands" />
       <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands" />
       <recent name="com.github.russiadiktatorv2.clubybot.commands.normalcommands.module" />
       <recent name="com.github.russiadiktatorv2.clubybot.management.commands" />
-      <recent name="com.github.russiadiktatorv2.clubybot.management.commands.commands" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ProgramLoaderKt">
+  <component name="RunManager" selected="Docker.Dockerfile">
     <configuration name="Cluby [distTar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -211,12 +227,29 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Dockerfile" type="docker-deploy" factoryName="dockerfile" temporary="true" server-name="Docker">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="imageTag" value="" />
+          <option name="buildCliOptions" value="" />
+          <option name="command" value="" />
+          <option name="containerName" value="" />
+          <option name="entrypoint" value="" />
+          <option name="commandLineOptions" value="" />
+          <option name="sourceFilePath" value="Dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2">
+        <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$/app" vmOptions="" scriptParameters="" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Docker.Dockerfile" />
         <item itemvalue="Application.ProgramLoaderKt" />
         <item itemvalue="Gradle.Cluby [distTar]" />
-        <item itemvalue="Gradle.Cluby [installDist]" />
         <item itemvalue="Gradle.Cluby [distZip]" />
+        <item itemvalue="Gradle.Cluby [installDist]" />
       </list>
     </recent_temporary>
   </component>
@@ -317,6 +350,10 @@
         <breakpoint enabled="true" type="java-exception">
           <properties class="java.net.SocketException" package="java.net" />
           <option name="timeStamp" value="1" />
+        </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="org.postgresql.util.PSQLException" package="org.postgresql.util" />
+          <option name="timeStamp" value="2" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>

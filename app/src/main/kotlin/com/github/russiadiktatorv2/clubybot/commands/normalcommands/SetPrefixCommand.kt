@@ -17,13 +17,12 @@ import java.util.concurrent.TimeUnit
 
 @LoadCommand
 class SetPrefixCommand : Command("prefix", CommandModule.DEFAULT) {
+
     override fun executeCommand(server: Server, user: User, textChannel: ServerTextChannel, message: Message, args: Array<out String>) {
         message.delete()
         if (args.size == 1) {
-            var newPrefix = args[0]
-            newPrefix = newPrefix.replace("\n", "")
+            val newPrefix = args[0].replace("\n", "")
             prefixSetup(newPrefix, server.id, textChannel)
-
         } else {
             sendEmbed(textChannel, 20, TimeUnit.SECONDS) {
                 setAuthor("» Error to set a prefix")

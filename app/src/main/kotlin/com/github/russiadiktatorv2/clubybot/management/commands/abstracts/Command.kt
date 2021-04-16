@@ -8,6 +8,7 @@ import org.javacord.api.entity.server.Server
 import org.javacord.api.entity.user.User
 
 abstract class Command : ICommand {
+
     var name: String
         private set
 

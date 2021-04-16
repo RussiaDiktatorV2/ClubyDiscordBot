@@ -1,4 +1,4 @@
-package com.github.russiadiktatorv2.clubybot.events
+package com.github.russiadiktatorv2.clubybot.events.commandevent
 
 import com.github.russiadiktatorv2.clubybot.management.commands.CacheManager
 import com.github.russiadiktatorv2.clubybot.management.commands.data.WelcomeSystem
@@ -102,10 +102,10 @@ class GuildMemberJoinEvent : ServerMemberJoinListener {
                         } finally {
                             g.dispose()
                         }
-                        val baos = ByteArrayOutputStream()
-                        ImageIO.write(image, "png", baos)
+                        val baOs = ByteArrayOutputStream()
+                        ImageIO.write(image, "png", baOs)
                         MessageBuilder().append(if (welcomeChannel.welcomeMessage != null) "${welcomeChannel.welcomeMessage}" else "").appendNewLine()
-                            .setEmbed(createEmbed { setImage(ByteArrayInputStream(baos.toByteArray()), "WelcomeImage.png") })
+                            .setEmbed(createEmbed { setImage(ByteArrayInputStream(baOs.toByteArray()), "WelcomeImage.png") })
                             .setTts(false).send(event.server.getTextChannelById(welcomeChannel.channelID).get())
                     } catch (exception: IOException) {
                         throw RuntimeException(exception)

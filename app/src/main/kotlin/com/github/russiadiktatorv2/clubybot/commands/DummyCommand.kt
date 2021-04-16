@@ -11,7 +11,6 @@ import org.javacord.api.entity.message.MessageBuilder
 import org.javacord.api.entity.permission.PermissionType
 import org.javacord.api.entity.server.Server
 import org.javacord.api.entity.user.User
-import java.util.*
 
 @LoadCommand
 class DummyCommand : Command("dummy", CommandModule.DEFAULT) {
@@ -27,12 +26,14 @@ class DummyCommand : Command("dummy", CommandModule.DEFAULT) {
             .append("🕵️‍♂️ | My current rest ping is ${server.api.measureRestLatency().join().toMillis()}ms").appendNewLine().appendNewLine()
             .append("🧔 | My current Ram Usage: ${(Runtime.getRuntime().totalMemory().minus(Runtime.getRuntime().freeMemory())).div(1024 * 1024)}%")
             .send(textChannel).thenAccept { it.addReactions("👮‍♂️", "👼", "👨‍🦰", "👲", "🕵️‍♀") }
+
+        
     }
 
     override val permissions: MutableList<PermissionType>
         get() = mutableListOf(PermissionType.ADMINISTRATOR)
     override val description: String
-        get() = TODO("Not yet implemented")
+        get() = ""
     override val usage: String
         get() = TODO("Not yet implemented")
 }

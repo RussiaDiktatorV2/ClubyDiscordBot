@@ -13,6 +13,7 @@ import java.awt.Color
 import java.util.concurrent.TimeUnit
 
 object CommandManager {
+
     val commands = mutableMapOf<String, Command>()
 
     fun loadCommands() {
@@ -21,8 +22,7 @@ object CommandManager {
         for (clazz in reflections.getTypesAnnotatedWith(LoadCommand::class.java, true)) {
             val obj = clazz.getDeclaredConstructor().newInstance()
 
-            if (obj is Command)
-                registerCommand(obj)
+            if (obj is Command) registerCommand(obj)
         }
     }
 
@@ -40,9 +40,12 @@ object CommandManager {
 
         var hasPermission = false
 
-        for (permission in server.getHighestRole(user).get().allowedPermissions) {
-            if (server.hasPermission(user, permission))
+        for (permission in server.getPermissions(user).allowedPermission) {
+            if (server.hasPermission(user, permission)) {
                 hasPermission = true
+            } else {
+                print("A")
+            }
         }
 
         if (hasPermission) {
